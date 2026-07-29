@@ -126,21 +126,38 @@ export default function ServiceCard({ pattern, title, desc, link, delay = 0 }) {
     const el = cardRef.current;
     if (!el || !window.matchMedia('(pointer: fine)').matches) return;
 
+    let tiltRaf = null;
+    let targetX = 0;
+    let targetY = 0;
+
+    const updateTilt = () => {
+      if (!el) return;
+      el.style.transform = `perspective(1000px) rotateY(${targetX * 8}deg) rotateX(${-targetY * 8}deg) scale3d(1.02, 1.02, 1.02)`;
+      tiltRaf = null;
+    };
+
     const handleMouseMove = (e) => {
       const rect = el.getBoundingClientRect();
-      const x = (e.clientX - rect.left) / rect.width - 0.5;
-      const y = (e.clientY - rect.top) / rect.height - 0.5;
-      el.style.transform = `perspective(1000px) rotateY(${x * 8}deg) rotateX(${-y * 8}deg) scale3d(1.02, 1.02, 1.02)`;
+      targetX = (e.clientX - rect.left) / rect.width - 0.5;
+      targetY = (e.clientY - rect.top) / rect.height - 0.5;
+      if (!tiltRaf) {
+        tiltRaf = requestAnimationFrame(updateTilt);
+      }
     };
 
     const handleMouseLeave = () => {
+      if (tiltRaf) {
+        cancelAnimationFrame(tiltRaf);
+        tiltRaf = null;
+      }
       el.style.transform = 'perspective(1000px) rotateY(0deg) rotateX(0deg) scale3d(1, 1, 1)';
     };
 
-    el.addEventListener('mousemove', handleMouseMove);
-    el.addEventListener('mouseleave', handleMouseLeave);
+    el.addEventListener('mousemove', handleMouseMove, { passive: true });
+    el.addEventListener('mouseleave', handleMouseLeave, { passive: true });
 
     return () => {
+      if (tiltRaf) cancelAnimationFrame(tiltRaf);
       el.removeEventListener('mousemove', handleMouseMove);
       el.removeEventListener('mouseleave', handleMouseLeave);
     };

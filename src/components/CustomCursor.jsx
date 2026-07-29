@@ -16,35 +16,17 @@ export default function CustomCursor() {
     let mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
     let dotPos = { x: mouse.x, y: mouse.y };
     let ringPos = { x: mouse.x, y: mouse.y };
-    let animId;
+    let animId = null;
+    let isAnimating = false;
 
     const lerp = (a, b, t) => a + (b - a) * t;
 
-    const handleMouseMove = (e) => {
-      mouse.x = e.clientX;
-      mouse.y = e.clientY;
-    };
+    const render = () => {
+      const dxDot = mouse.x - dotPos.x;
+      const dyDot = mouse.y - dotPos.y;
+      const dxRing = mouse.x - ringPos.x;
+      const dyRing = mouse.y - ringPos.y;
 
-    const handleMouseEnter = () => document.body.classList.add('cursor-hovering');
-    const handleMouseLeave = () => document.body.classList.remove('cursor-hovering');
-
-    window.addEventListener('mousemove', handleMouseMove);
-
-    const interactiveSelector = 'a, button, input, textarea, [data-magnetic], .service-card, .testimonial-card';
-    const attachHover = () => {
-      document.querySelectorAll(interactiveSelector).forEach((el) => {
-        el.removeEventListener('mouseenter', handleMouseEnter);
-        el.removeEventListener('mouseleave', handleMouseLeave);
-        el.addEventListener('mouseenter', handleMouseEnter);
-        el.addEventListener('mouseleave', handleMouseLeave);
-      });
-    };
-
-    attachHover();
-    const observer = new MutationObserver(attachHover);
-    observer.observe(document.body, { childList: true, subtree: true });
-
-    function render() {
       dotPos.x = lerp(dotPos.x, mouse.x, 0.9);
       dotPos.y = lerp(dotPos.y, mouse.y, 0.9);
 
@@ -54,14 +36,54 @@ export default function CustomCursor() {
       dot.style.transform = `translate3d(${dotPos.x}px, ${dotPos.y}px, 0) translate(-50%, -50%)`;
       ring.style.transform = `translate3d(${ringPos.x}px, ${ringPos.y}px, 0) translate(-50%, -50%)`;
 
-      animId = requestAnimationFrame(render);
-    }
-    render();
+      if (Math.abs(dxDot) < 0.05 && Math.abs(dyDot) < 0.05 && Math.abs(dxRing) < 0.05 && Math.abs(dyRing) < 0.05) {
+        isAnimating = false;
+        animId = null;
+      } else {
+        animId = requestAnimationFrame(render);
+      }
+    };
+
+    const startAnimating = () => {
+      if (!isAnimating) {
+        isAnimating = true;
+        animId = requestAnimationFrame(render);
+      }
+    };
+
+    const handleMouseMove = (e) => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+      startAnimating();
+    };
+
+    const interactiveSelector = 'a, button, input, textarea, [data-magnetic], .service-card, .testimonial-card';
+
+    const handleMouseOver = (e) => {
+      if (e.target && e.target.closest && e.target.closest(interactiveSelector)) {
+        document.body.classList.add('cursor-hovering');
+      }
+    };
+
+    const handleMouseOut = (e) => {
+      if (e.target && e.target.closest && e.target.closest(interactiveSelector)) {
+        if (!e.relatedTarget || !e.relatedTarget.closest || !e.relatedTarget.closest(interactiveSelector)) {
+          document.body.classList.remove('cursor-hovering');
+        }
+      }
+    };
+
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    window.addEventListener('mouseover', handleMouseOver, { passive: true });
+    window.addEventListener('mouseout', handleMouseOut, { passive: true });
+
+    startAnimating();
 
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
-      cancelAnimationFrame(animId);
-      observer.disconnect();
+      window.removeEventListener('mouseover', handleMouseOver);
+      window.removeEventListener('mouseout', handleMouseOut);
+      if (animId) cancelAnimationFrame(animId);
     };
   }, []);
 
@@ -72,3 +94,4 @@ export default function CustomCursor() {
     </>
   );
 }
+

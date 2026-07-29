@@ -126,6 +126,9 @@ export default function WebGLBackground() {
       renderer.setSize(window.innerWidth, window.innerHeight);
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
 
+      const targetMouse = new THREE.Vector2(window.innerWidth / 2, window.innerHeight / 2);
+      const currentMouse = new THREE.Vector2(window.innerWidth / 2, window.innerHeight / 2);
+
       const handleResize = () => {
         const w = window.innerWidth;
         const h = window.innerHeight;
@@ -134,18 +137,22 @@ export default function WebGLBackground() {
       };
 
       const handleMouseMove = (e) => {
-        material.uniforms.uMouse.value.set(e.clientX, window.innerHeight - e.clientY);
+        targetMouse.set(e.clientX, window.innerHeight - e.clientY);
       };
 
       const handleScroll = () => {
         material.uniforms.uScroll.value = window.scrollY;
       };
 
-      window.addEventListener('resize', handleResize);
-      window.addEventListener('mousemove', handleMouseMove);
+      window.addEventListener('resize', handleResize, { passive: true });
+      window.addEventListener('mousemove', handleMouseMove, { passive: true });
       window.addEventListener('scroll', handleScroll, { passive: true });
 
       const animate = () => {
+        currentMouse.x += (targetMouse.x - currentMouse.x) * 0.1;
+        currentMouse.y += (targetMouse.y - currentMouse.y) * 0.1;
+        material.uniforms.uMouse.value.copy(currentMouse);
+
         material.uniforms.uTime.value = performance.now() * 0.0005;
         renderer.render(scene, camera);
         animId = requestAnimationFrame(animate);

@@ -223,19 +223,39 @@ export default function Home() {
     if (window.matchMedia('(pointer: fine)').matches) {
       document.querySelectorAll('[data-magnetic]').forEach((el) => {
         const inner = el.querySelector('span') || el;
+        let magRaf = null;
+        let magX = 0;
+        let magY = 0;
+
+        const updateMag = () => {
+          if (!inner) return;
+          inner.style.transition = 'none';
+          inner.style.transform = `translate(${magX}px, ${magY}px)`;
+          magRaf = null;
+        };
+
         const handleMove = (e) => {
           const rect = el.getBoundingClientRect();
           const centerX = rect.left + rect.width / 2;
           const centerY = rect.top + rect.height / 2;
-          inner.style.transition = 'none';
-          inner.style.transform = `translate(${(e.clientX - centerX) * 0.3}px, ${(e.clientY - centerY) * 0.3}px)`;
+          magX = (e.clientX - centerX) * 0.3;
+          magY = (e.clientY - centerY) * 0.3;
+          if (!magRaf) {
+            magRaf = requestAnimationFrame(updateMag);
+          }
         };
+
         const handleLeave = () => {
+          if (magRaf) {
+            cancelAnimationFrame(magRaf);
+            magRaf = null;
+          }
           inner.style.transition = 'transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)';
           inner.style.transform = 'translate(0px, 0px)';
         };
-        el.addEventListener('mousemove', handleMove);
-        el.addEventListener('mouseleave', handleLeave);
+
+        el.addEventListener('mousemove', handleMove, { passive: true });
+        el.addEventListener('mouseleave', handleLeave, { passive: true });
       });
     }
 
