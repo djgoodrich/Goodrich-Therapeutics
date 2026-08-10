@@ -60,6 +60,14 @@ export default function Navbar() {
         <Link href="/services" className="nav-link" data-magnetic>
           Services
         </Link>
+        <Link
+          href="/#memberships"
+          className="nav-link"
+          data-magnetic
+          onClick={(e) => handleNavClick(e, 'memberships')}
+        >
+          Memberships
+        </Link>
         <Link href="/#about" className="nav-link" data-magnetic onClick={(e) => handleNavClick(e, 'about')}>
           About
         </Link>

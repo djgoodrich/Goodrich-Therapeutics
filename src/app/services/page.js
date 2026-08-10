@@ -381,6 +381,29 @@ export default function ServicesPage() {
         </div>
       </section>
 
+      {/* ─── MEMBERSHIP CALLOUT ─── */}
+      <section className="container" style={{ padding: '40px 5%' }}>
+        <div className="membership-callout-banner" data-animate="fade-up">
+          <div className="membership-callout-text">
+            <h3>Save &amp; Stay Balanced with Monthly Memberships</h3>
+            <p>
+              Looking for regular bodywork? Receive discounted rates, unused session rollover, and priority booking with our monthly membership plans.
+            </p>
+          </div>
+          <div>
+            <a
+              href="https://www.massagebook.com/therapists/GoodrichMassage/deals"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn--primary btn--lg"
+              data-magnetic
+            >
+              <span>Explore Memberships</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
       {/* ─── CTA BANNER ─── */}
       <section className="services-cta-banner">
         <h2 data-animate="fade-up">Not Sure Which Service Is Right for You?</h2>

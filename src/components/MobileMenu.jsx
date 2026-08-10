@@ -50,6 +50,9 @@ export default function MobileMenu() {
         <Link href="/services" className="mobile-link" onClick={closeMenu}>
           Services
         </Link>
+        <Link href="/#memberships" className="mobile-link" onClick={(e) => handleNavClick(e, 'memberships')}>
+          Memberships
+        </Link>
         <Link href="/#about" className="mobile-link" onClick={(e) => handleNavClick(e, 'about')}>
           About
         </Link>

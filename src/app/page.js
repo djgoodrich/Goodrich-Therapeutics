@@ -421,6 +421,141 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ─── MEMBERSHIPS ─── */}
+      <section id="memberships" className="section memberships">
+        <div className="container">
+          <div style={{ textAlign: 'center', maxWidth: '720px', margin: '0 auto' }}>
+            <span className="section-tag" data-animate="fade-up">
+              Wellness Committed
+            </span>
+            <h2 className="section-title" data-animate="fade-up">
+              Massage Memberships
+            </h2>
+            <p
+              style={{ fontSize: '18px', color: 'var(--text-dim)', lineHeight: 1.7, marginTop: '-12px' }}
+              data-animate="fade-up"
+            >
+              Prioritize your health with consistent, recurring bodywork. Save on every session and maintain lasting relief, posture alignment, and physical well-being.
+            </p>
+          </div>
+
+          <div className="memberships-grid">
+            {/* Tier 1: Monthly 60 Min */}
+            <div className="membership-card" data-animate="fade-up">
+              <span className="membership-badge">Popular Choice</span>
+              <h3 className="membership-tier-name">Monthly Wellness</h3>
+              <p className="membership-tier-desc">Ideal for consistent stress relief and posture maintenance.</p>
+              <div className="membership-price-wrap">
+                <span className="membership-price">60 Min</span>
+                <span className="membership-period">/ session per month</span>
+              </div>
+              <ul className="membership-features">
+                <li>
+                  <span className="membership-feature-icon" />
+                  1 Full 60-Minute Therapeutic Session included every month
+                </li>
+                <li>
+                  <span className="membership-feature-icon" />
+                  Exclusive member rate on additional sessions throughout the month
+                </li>
+                <li>
+                  <span className="membership-feature-icon" />
+                  Flexible unused session rollover &amp; transfer options
+                </li>
+                <li>
+                  <span className="membership-feature-icon" />
+                  Priority online scheduling &amp; convenient auto-renewal
+                </li>
+              </ul>
+              <div className="membership-card-cta">
+                <a
+                  href="https://www.massagebook.com/therapists/GoodrichMassage/deals"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn btn--outline btn--lg"
+                  data-magnetic
+                >
+                  <span>Select Membership</span>
+                </a>
+              </div>
+            </div>
+
+            {/* Tier 2: Monthly 90 Min */}
+            <div className="membership-card membership-card--featured" data-animate="fade-up" data-delay="0.15">
+              <span className="membership-badge membership-badge--gold">Deep Transformation</span>
+              <h3 className="membership-tier-name">Deep Restorative</h3>
+              <p className="membership-tier-desc">Designed for comprehensive deep tissue massage and targeted muscle relief.</p>
+              <div className="membership-price-wrap">
+                <span className="membership-price">90 Min</span>
+                <span className="membership-period">/ session per month</span>
+              </div>
+              <ul className="membership-features">
+                <li>
+                  <span className="membership-feature-icon" />
+                  1 Extended 90-Minute Massage Therapy Session (Deep Tissue or Swedish)
+                </li>
+                <li>
+                  <span className="membership-feature-icon" />
+                  Maximum cost savings &amp; member-only rates on add-ons
+                </li>
+                <li>
+                  <span className="membership-feature-icon" />
+                  Customized treatment plan focused on chronic tension &amp; deep muscle relief
+                </li>
+                <li>
+                  <span className="membership-feature-icon" />
+                  Priority weekend scheduling &amp; seamless monthly billing
+                </li>
+                <li style={{ fontSize: '13px', color: 'var(--accent)', fontStyle: 'italic' }}>
+                  <span className="membership-feature-icon" />
+                  Applies to massage therapy sessions (Structural Integration excluded)
+                </li>
+              </ul>
+              <div className="membership-card-cta">
+                <a
+                  href="https://www.massagebook.com/therapists/GoodrichMassage/deals"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn btn--primary btn--lg"
+                  data-magnetic
+                >
+                  <span>Select Membership</span>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div className="membership-benefits-grid" data-animate="fade-up">
+            <div className="membership-benefit-card">
+              <div className="benefit-icon-bubble">⚡</div>
+              <h4>Consistent Healing</h4>
+              <p>Regular massage prevents tension accumulation before chronic pain takes over.</p>
+            </div>
+            <div className="membership-benefit-card">
+              <div className="benefit-icon-bubble">💎</div>
+              <h4>Member Savings</h4>
+              <p>Enjoy discounted rates on every monthly session and additional bookings.</p>
+            </div>
+            <div className="membership-benefit-card">
+              <div className="benefit-icon-bubble">🔄</div>
+              <h4>Roll-Over Credits</h4>
+              <p>Busy month? Unused sessions safely roll over so you never lose your investment.</p>
+            </div>
+            <div className="membership-benefit-card">
+              <div className="benefit-icon-bubble">📅</div>
+              <h4>Priority Booking</h4>
+              <p>Get first pick of prime weekend and evening appointment slots.</p>
+            </div>
+          </div>
+
+          <div style={{ textAlign: 'center', marginTop: '40px' }} data-animate="fade-up">
+            <Link href="/memberships" className="btn btn--ghost btn--md" data-magnetic>
+              <span>View Full Membership Details &amp; FAQs &rarr;</span>
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* ─── ABOUT ─── */}
       <section id="about" className="section about">
         <div className="container about-grid">
