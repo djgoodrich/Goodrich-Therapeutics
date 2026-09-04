@@ -122,9 +122,10 @@ export default function WebGLBackground() {
       const mesh = new THREE.Mesh(geometry, material);
       scene.add(mesh);
 
-      renderer = new THREE.WebGLRenderer({ canvas, antialias: false, alpha: false });
+      const isMobile = window.matchMedia('(pointer: coarse)').matches;
+      renderer = new THREE.WebGLRenderer({ canvas, antialias: false, alpha: false, powerPreference: 'low-power' });
       renderer.setSize(window.innerWidth, window.innerHeight);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isMobile ? 1.0 : 1.25));
 
       const targetMouse = new THREE.Vector2(window.innerWidth / 2, window.innerHeight / 2);
       const currentMouse = new THREE.Vector2(window.innerWidth / 2, window.innerHeight / 2);
@@ -148,7 +149,20 @@ export default function WebGLBackground() {
       window.addEventListener('mousemove', handleMouseMove, { passive: true });
       window.addEventListener('scroll', handleScroll, { passive: true });
 
+      let isPaused = false;
+      const handleVisibilityChange = () => {
+        if (document.hidden) {
+          isPaused = true;
+          if (animId) cancelAnimationFrame(animId);
+        } else {
+          isPaused = false;
+          animId = requestAnimationFrame(animate);
+        }
+      };
+      document.addEventListener('visibilitychange', handleVisibilityChange);
+
       const animate = () => {
+        if (isPaused) return;
         currentMouse.x += (targetMouse.x - currentMouse.x) * 0.1;
         currentMouse.y += (targetMouse.y - currentMouse.y) * 0.1;
         material.uniforms.uMouse.value.copy(currentMouse);
@@ -157,13 +171,14 @@ export default function WebGLBackground() {
         renderer.render(scene, camera);
         animId = requestAnimationFrame(animate);
       };
-      animate();
+      animId = requestAnimationFrame(animate);
 
       return () => {
         window.removeEventListener('resize', handleResize);
         window.removeEventListener('mousemove', handleMouseMove);
         window.removeEventListener('scroll', handleScroll);
-        cancelAnimationFrame(animId);
+        document.removeEventListener('visibilitychange', handleVisibilityChange);
+        if (animId) cancelAnimationFrame(animId);
         renderer.dispose();
       };
     } catch (e) {

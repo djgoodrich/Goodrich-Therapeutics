@@ -662,6 +662,18 @@ export default function Home() {
           <h2 className="section-title" data-animate="fade-up">
             Words of Restoration
           </h2>
+          <div style={{ textAlign: 'center', marginBottom: '40px' }} data-animate="fade-up">
+            <a
+              href="https://www.massagebook.com/therapists/GoodrichMassage/reviews"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="verified-reviews-badge"
+              data-magnetic
+            >
+              <span className="verified-stars">★★★★★</span>
+              <span><strong>5.0 Rating</strong> &bull; 36 Verified Reviews on MassageBook &rarr;</span>
+            </a>
+          </div>
           <div className="testimonials-grid">
             <div className="testimonial-card" data-animate="fade-up">
               <span className="testimonial-quote">&ldquo;</span>
@@ -750,6 +762,14 @@ export default function Home() {
               <h4>Email</h4>
               <p>
                 <a href="mailto:GoodrichTherapeutics@gmail.com">GoodrichTherapeutics@gmail.com</a>
+              </p>
+            </div>
+            <div className="contact-item">
+              <h4>Service Area</h4>
+              <p>
+                Cornelius, Davidson, Huntersville,
+                <br />
+                Mooresville &amp; Lake Norman
               </p>
             </div>
           </div>

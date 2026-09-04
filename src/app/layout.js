@@ -42,9 +42,71 @@ export const metadata = {
   },
 };
 
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'MassageTherapist',
+  name: 'Goodrich Therapeutics',
+  image: 'https://goodrichtherapeutics.com/logo.png',
+  '@id': 'https://goodrichtherapeutics.com/#business',
+  url: 'https://goodrichtherapeutics.com',
+  telephone: '+17049311074',
+  priceRange: '$$',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: '20905 Torrence Chapel Rd, Suite 204',
+    addressLocality: 'Cornelius',
+    addressRegion: 'NC',
+    postalCode: '28031',
+    addressCountry: 'US',
+  },
+  geo: {
+    '@type': 'GeoCoordinates',
+    latitude: 35.4856,
+    longitude: -80.8879,
+  },
+  openingHoursSpecification: [
+    {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: 'Monday',
+      opens: '12:00',
+      closes: '19:00',
+    },
+    {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: 'Tuesday',
+      opens: '13:00',
+      closes: '20:00',
+    },
+    {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: 'Thursday',
+      opens: '09:00',
+      closes: '15:00',
+    },
+  ],
+  areaServed: [
+    { '@type': 'City', name: 'Cornelius' },
+    { '@type': 'City', name: 'Davidson' },
+    { '@type': 'City', name: 'Huntersville' },
+    { '@type': 'City', name: 'Mooresville' },
+    { '@type': 'AdministrativeArea', name: 'Lake Norman' },
+    { '@type': 'City', name: 'Charlotte' },
+  ],
+  sameAs: [
+    'https://www.massagebook.com/therapists/GoodrichMassage',
+    'https://www.massagebook.com/therapists/GoodrichMassage/reviews',
+  ],
+};
+
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${cormorant.variable} ${inter.variable}`}>
+    <html lang="en" className={`${cormorant.variable} ${inter.variable}`} data-scroll-behavior="smooth">
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
       <body>
         <SvgFilters />
         <Preloader />
@@ -57,3 +119,4 @@ export default function RootLayout({ children }) {
     </html>
   );
 }
+

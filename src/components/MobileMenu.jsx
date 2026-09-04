@@ -77,6 +77,9 @@ export default function MobileMenu() {
         >
           Book Now
         </a>
+        <a href="tel:+17049311074" className="mobile-phone-link" onClick={closeMenu}>
+          📞 Call (704) 931-1074
+        </a>
       </nav>
     </div>
   );

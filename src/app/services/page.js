@@ -180,6 +180,9 @@ export default function ServicesPage() {
                 Integration
               </h2>
               <p className="service-detail-tagline">Realign. Rebalance. Restore.</p>
+              <div className="service-pricing-badge">
+                <span>90 Min &bull; $135</span>
+              </div>
               <div className="service-detail-body">
                 <p>
                   Structural Integration is a holistic bodywork approach that aims to realign and balance the body's structure within its gravitational field. This method, developed by Dr. Ida Rolf, focuses on manipulating the body's myofascial system &mdash; the network of connective tissues that surrounds muscles, bones, and organs.
@@ -251,6 +254,13 @@ export default function ServicesPage() {
                 Massage
               </h2>
               <p className="service-detail-tagline">Targeted Relief for Deep Tension.</p>
+              <div className="service-pricing-badge">
+                <span>60 Min &bull; $90</span>
+                <span className="pricing-divider">/</span>
+                <span>90 Min &bull; $125</span>
+                <span className="pricing-divider">/</span>
+                <span>2 Hr &bull; $160</span>
+              </div>
               <div className="service-detail-body">
                 <p>
                   For those seeking relief from chronic muscle tension and deep-seated pain, deep tissue massage is an exceptional choice. This specialized massage technique targets the deeper layers of muscle and connective tissue, focusing on areas of tightness and restriction.
@@ -322,6 +332,13 @@ export default function ServicesPage() {
                 Massage
               </h2>
               <p className="service-detail-tagline">Gentle Relaxation for Body &amp; Mind.</p>
+              <div className="service-pricing-badge">
+                <span>60 Min &bull; $90</span>
+                <span className="pricing-divider">/</span>
+                <span>90 Min &bull; $125</span>
+                <span className="pricing-divider">/</span>
+                <span>2 Hr &bull; $160</span>
+              </div>
               <div className="service-detail-body">
                 <p>
                   Swedish massage offers a multitude of benefits for both body and mind, making it an excellent choice for those seeking relaxation and overall wellness.
