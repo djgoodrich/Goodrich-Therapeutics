@@ -40,6 +40,15 @@ export const metadata = {
     title: 'Goodrich Therapeutics | Massage Therapy & Structural Integration',
     description: 'Expert massage therapy and structural integration in Cornelius, NC. Book your appointment today.',
   },
+  icons: {
+    icon: [
+      { url: '/favicon.ico' },
+      { url: '/icon.png', sizes: '512x512', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/apple-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
+  },
 };
 
 const jsonLd = {
