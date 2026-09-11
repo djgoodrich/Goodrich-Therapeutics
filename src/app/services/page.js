@@ -10,30 +10,49 @@ export default function ServicesPage() {
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
 
-    document.querySelectorAll("[data-animate='fade-up']").forEach((el) => {
-      const delay = parseFloat(el.getAttribute('data-delay') || '0');
-      gsap.fromTo(
-        el,
-        { opacity: 0, y: 40 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.9,
-          delay,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: el,
-            start: 'top 95%',
-            toggleActions: 'play none none none',
-            onRefresh: (self) => {
-              if (self.progress > 0) {
-                gsap.set(el, { opacity: 1, y: 0 });
-              }
+    const isMobile = window.innerWidth < 768 || window.matchMedia('(pointer: coarse)').matches;
+
+    if (isMobile) {
+      document.querySelectorAll("[data-animate='fade-up']").forEach((el) => {
+        el.style.opacity = '1';
+        el.style.transform = 'none';
+      });
+    } else {
+      document.querySelectorAll("[data-animate='fade-up']").forEach((el) => {
+        const delay = parseFloat(el.getAttribute('data-delay') || '0');
+        gsap.fromTo(
+          el,
+          { opacity: 0, y: 40 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.9,
+            delay,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: el,
+              start: 'top 95%',
+              toggleActions: 'play none none none',
+              onRefresh: (self) => {
+                if (self.progress > 0) {
+                  gsap.set(el, { opacity: 1, y: 0 });
+                }
+              },
             },
-          },
+          }
+        );
+      });
+    }
+
+    if (isMobile) {
+      const refreshTimer = setTimeout(() => {
+        if (window.location.hash) {
+          const hashEl = document.querySelector(window.location.hash);
+          if (hashEl) hashEl.scrollIntoView({ behavior: 'smooth' });
         }
-      );
-    });
+      }, 200);
+      return () => clearTimeout(refreshTimer);
+    }
 
     // Initialize detail canvases
     document.querySelectorAll('.service-detail-canvas').forEach((canvas) => {

@@ -10,6 +10,16 @@ export default function MembershipsPage() {
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
 
+    const isMobile = window.innerWidth < 768 || window.matchMedia('(pointer: coarse)').matches;
+
+    if (isMobile) {
+      document.querySelectorAll("[data-animate='fade-up']").forEach((el) => {
+        el.style.opacity = '1';
+        el.style.transform = 'none';
+      });
+      return;
+    }
+
     document.querySelectorAll("[data-animate='fade-up']").forEach((el) => {
       const delay = parseFloat(el.getAttribute('data-delay') || '0');
       gsap.fromTo(

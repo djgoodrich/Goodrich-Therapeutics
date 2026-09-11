@@ -9,8 +9,8 @@ import MobileMenu from '@/components/MobileMenu';
 
 const cormorant = Cormorant_Garamond({
   subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700'],
-  style: ['normal', 'italic'],
+  weight: ['300', '400', '600'],
+  style: ['normal'],
   variable: '--font-cormorant',
   display: 'swap',
 });
@@ -20,6 +20,13 @@ const inter = Inter({
   variable: '--font-inter',
   display: 'swap',
 });
+
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover',
+  themeColor: '#070707',
+};
 
 export const metadata = {
   title: 'Goodrich Therapeutics | Massage Therapy & Structural Integration in Cornelius, NC',

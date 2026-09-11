@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import * as THREE from 'three';
 
 export default function WebGLBackground() {
   const canvasRef = useRef(null);
@@ -10,8 +9,15 @@ export default function WebGLBackground() {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
+    // Skip heavy WebGL shader calculations and Three.js download on mobile / touch devices
+    if (window.innerWidth < 768 || window.matchMedia('(pointer: coarse)').matches) {
+      return;
+    }
+
     let scene, camera, renderer, material;
     let animId;
+    let isDisposed = false;
+    let handleResize, handleMouseMove, handleScroll, handleVisibilityChange;
 
     const vertexShader = `
       varying vec2 vUv;
@@ -103,87 +109,90 @@ export default function WebGLBackground() {
       }
     `;
 
-    try {
-      scene = new THREE.Scene();
-      camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+    import('three').then((THREE) => {
+      if (isDisposed) return;
+      try {
+        scene = new THREE.Scene();
+        camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
 
-      material = new THREE.ShaderMaterial({
-        vertexShader,
-        fragmentShader,
-        uniforms: {
-          uTime: { value: 0 },
-          uScroll: { value: 0 },
-          uMouse: { value: new THREE.Vector2(window.innerWidth / 2, window.innerHeight / 2) },
-          uResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
-        },
-      });
+        material = new THREE.ShaderMaterial({
+          vertexShader,
+          fragmentShader,
+          uniforms: {
+            uTime: { value: 0 },
+            uScroll: { value: 0 },
+            uMouse: { value: new THREE.Vector2(window.innerWidth / 2, window.innerHeight / 2) },
+            uResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
+          },
+        });
 
-      const geometry = new THREE.PlaneGeometry(2, 2);
-      const mesh = new THREE.Mesh(geometry, material);
-      scene.add(mesh);
+        const geometry = new THREE.PlaneGeometry(2, 2);
+        const mesh = new THREE.Mesh(geometry, material);
+        scene.add(mesh);
 
-      const isMobile = window.matchMedia('(pointer: coarse)').matches;
-      renderer = new THREE.WebGLRenderer({ canvas, antialias: false, alpha: false, powerPreference: 'low-power' });
-      renderer.setSize(window.innerWidth, window.innerHeight);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isMobile ? 1.0 : 1.25));
+        renderer = new THREE.WebGLRenderer({ canvas, antialias: false, alpha: false, powerPreference: 'low-power' });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.25));
 
-      const targetMouse = new THREE.Vector2(window.innerWidth / 2, window.innerHeight / 2);
-      const currentMouse = new THREE.Vector2(window.innerWidth / 2, window.innerHeight / 2);
+        const targetMouse = new THREE.Vector2(window.innerWidth / 2, window.innerHeight / 2);
+        const currentMouse = new THREE.Vector2(window.innerWidth / 2, window.innerHeight / 2);
 
-      const handleResize = () => {
-        const w = window.innerWidth;
-        const h = window.innerHeight;
-        renderer.setSize(w, h);
-        material.uniforms.uResolution.value.set(w, h);
-      };
+        handleResize = () => {
+          const w = window.innerWidth;
+          const h = window.innerHeight;
+          renderer.setSize(w, h);
+          material.uniforms.uResolution.value.set(w, h);
+        };
 
-      const handleMouseMove = (e) => {
-        targetMouse.set(e.clientX, window.innerHeight - e.clientY);
-      };
+        handleMouseMove = (e) => {
+          targetMouse.set(e.clientX, window.innerHeight - e.clientY);
+        };
 
-      const handleScroll = () => {
-        material.uniforms.uScroll.value = window.scrollY;
-      };
+        handleScroll = () => {
+          material.uniforms.uScroll.value = window.scrollY;
+        };
 
-      window.addEventListener('resize', handleResize, { passive: true });
-      window.addEventListener('mousemove', handleMouseMove, { passive: true });
-      window.addEventListener('scroll', handleScroll, { passive: true });
+        window.addEventListener('resize', handleResize, { passive: true });
+        window.addEventListener('mousemove', handleMouseMove, { passive: true });
+        window.addEventListener('scroll', handleScroll, { passive: true });
 
-      let isPaused = false;
-      const handleVisibilityChange = () => {
-        if (document.hidden) {
-          isPaused = true;
-          if (animId) cancelAnimationFrame(animId);
-        } else {
-          isPaused = false;
+        let isPaused = false;
+        handleVisibilityChange = () => {
+          if (document.hidden) {
+            isPaused = true;
+            if (animId) cancelAnimationFrame(animId);
+          } else {
+            isPaused = false;
+            animId = requestAnimationFrame(animate);
+          }
+        };
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+
+        const animate = () => {
+          if (isPaused) return;
+          currentMouse.x += (targetMouse.x - currentMouse.x) * 0.1;
+          currentMouse.y += (targetMouse.y - currentMouse.y) * 0.1;
+          material.uniforms.uMouse.value.copy(currentMouse);
+
+          material.uniforms.uTime.value = performance.now() * 0.0005;
+          renderer.render(scene, camera);
           animId = requestAnimationFrame(animate);
-        }
-      };
-      document.addEventListener('visibilitychange', handleVisibilityChange);
-
-      const animate = () => {
-        if (isPaused) return;
-        currentMouse.x += (targetMouse.x - currentMouse.x) * 0.1;
-        currentMouse.y += (targetMouse.y - currentMouse.y) * 0.1;
-        material.uniforms.uMouse.value.copy(currentMouse);
-
-        material.uniforms.uTime.value = performance.now() * 0.0005;
-        renderer.render(scene, camera);
+        };
         animId = requestAnimationFrame(animate);
-      };
-      animId = requestAnimationFrame(animate);
+      } catch (e) {
+        console.warn('WebGL background fallback:', e);
+      }
+    });
 
-      return () => {
-        window.removeEventListener('resize', handleResize);
-        window.removeEventListener('mousemove', handleMouseMove);
-        window.removeEventListener('scroll', handleScroll);
-        document.removeEventListener('visibilitychange', handleVisibilityChange);
-        if (animId) cancelAnimationFrame(animId);
-        renderer.dispose();
-      };
-    } catch (e) {
-      console.warn('WebGL background fallback:', e);
-    }
+    return () => {
+      isDisposed = true;
+      if (handleResize) window.removeEventListener('resize', handleResize);
+      if (handleMouseMove) window.removeEventListener('mousemove', handleMouseMove);
+      if (handleScroll) window.removeEventListener('scroll', handleScroll);
+      if (handleVisibilityChange) document.removeEventListener('visibilitychange', handleVisibilityChange);
+      if (animId) cancelAnimationFrame(animId);
+      if (renderer) renderer.dispose();
+    };
   }, []);
 
   return <canvas ref={canvasRef} id="webgl-bg" aria-hidden="true" />;

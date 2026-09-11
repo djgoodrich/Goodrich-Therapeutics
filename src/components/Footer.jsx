@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function Footer() {
   return (
@@ -10,7 +11,7 @@ export default function Footer() {
       </div>
       <div className="container footer-content">
         <div className="footer-brand">
-          <img src="/logo.png" alt="Goodrich Therapeutics" className="footer-logo-img" />
+          <Image src="/logo.png" alt="Goodrich Therapeutics" width={60} height={96} className="footer-logo-img" />
           <span className="footer-logo">Goodrich Therapeutics</span>
           <p>
             Massage Therapy &amp; Structural Integration

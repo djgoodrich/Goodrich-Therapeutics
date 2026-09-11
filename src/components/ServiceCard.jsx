@@ -11,6 +11,10 @@ export default function ServiceCard({ pattern, title, desc, link, delay = 0 }) {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
+    if (window.innerWidth < 768 || window.matchMedia('(pointer: coarse)').matches) {
+      return;
+    }
+
     const ctx = canvas.getContext('2d');
     let w, h;
     let time = 0;

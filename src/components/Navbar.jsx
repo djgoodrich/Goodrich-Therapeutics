@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import gsap from 'gsap';
 
@@ -15,10 +16,18 @@ export default function Navbar() {
       setScrolled(window.scrollY > 50);
     };
 
+    const handleMenuToggle = (e) => {
+      setMenuActive(Boolean(e.detail?.active));
+    };
+
     window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('toggleMobileMenu', handleMenuToggle);
     handleScroll();
 
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('toggleMobileMenu', handleMenuToggle);
+    };
   }, []);
 
   const toggleMenu = () => {
@@ -45,7 +54,7 @@ export default function Navbar() {
   return (
     <header id="navbar" className={scrolled ? 'scrolled' : ''} role="banner">
       <Link href="/" className="nav-logo" data-magnetic onClick={(e) => handleNavClick(e, 'hero')}>
-        <img src="/logo.png" alt="Goodrich Therapeutics" className="nav-logo-img" />
+        <Image src="/logo.png" alt="Goodrich Therapeutics" width={32} height={51} priority className="nav-logo-img" />
         Goodrich<span className="logo-dot">.</span>
       </Link>
       <nav aria-label="Main navigation">

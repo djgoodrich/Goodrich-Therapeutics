@@ -1,28 +1,33 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 
 export default function Preloader() {
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    // If preloader was already shown in this session, skip delay
-    if (typeof window !== 'undefined' && sessionStorage.getItem('preloaderShown')) {
+    if (typeof window === 'undefined') return;
+
+    const isMobile = window.innerWidth < 768 || window.matchMedia('(pointer: coarse)').matches;
+    const alreadyShown = sessionStorage.getItem('preloaderShown');
+
+    // On mobile or if already shown in this session, skip delay entirely
+    if (isMobile || alreadyShown) {
       setLoaded(true);
       window.dispatchEvent(new CustomEvent('preloaderComplete'));
       return;
     }
 
+    // Snappy desktop intro delay
     const timer1 = setTimeout(() => {
       setLoaded(true);
-      if (typeof window !== 'undefined') {
-        sessionStorage.setItem('preloaderShown', 'true');
-      }
+      sessionStorage.setItem('preloaderShown', 'true');
       const timer2 = setTimeout(() => {
         window.dispatchEvent(new CustomEvent('preloaderComplete'));
-      }, 500);
+      }, 300);
       return () => clearTimeout(timer2);
-    }, 1400);
+    }, 350);
 
     return () => clearTimeout(timer1);
   }, []);
@@ -30,7 +35,14 @@ export default function Preloader() {
   return (
     <div id="preloader" className={loaded ? 'loaded' : ''} aria-hidden="true">
       <div className="preloader-inner">
-        <img src="/logo.png" alt="" className="preloader-logo" />
+        <Image
+          src="/logo.png"
+          alt=""
+          width={120}
+          height={191}
+          priority
+          className="preloader-logo"
+        />
         <span className="preloader-text">Goodrich</span>
         <span className="preloader-sub">Therapeutics</span>
       </div>

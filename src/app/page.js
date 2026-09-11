@@ -1,342 +1,29 @@
-'use client';
-
-import { useEffect, useRef } from 'react';
 import Link from 'next/link';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import WebGLBackground from '@/components/WebGLBackground';
+import Image from 'next/image';
 import ServiceCard from '@/components/ServiceCard';
 import Footer from '@/components/Footer';
+import HomeAnimations from '@/components/HomeAnimations';
+import ContactCanvas from '@/components/ContactCanvas';
+import WebGLBackground from '@/components/WebGLBackground';
 
 export default function Home() {
-  const contactCanvasRef = useRef(null);
-
-  useEffect(() => {
-    gsap.registerPlugin(ScrollTrigger);
-
-    // Split character helper
-    const splitChars = (el) => {
-      if (!el || el.querySelector('.char')) return;
-      const text = el.textContent;
-      el.textContent = '';
-      el.setAttribute('aria-label', text);
-      Array.from(text).forEach((char) => {
-        const span = document.createElement('span');
-        span.className = 'char';
-        span.innerHTML = char === ' ' ? '&nbsp;' : char;
-        el.appendChild(span);
-      });
-    };
-
-    // Split hero title lines & contact title
-    const heroTitle1 = document.querySelector('.hero-title .title-line:nth-child(1)');
-    const heroTitle2 = document.querySelector('.hero-title .title-line:nth-child(2)');
-    const contactTitle = document.querySelector('.contact-title');
-
-    splitChars(heroTitle1);
-    splitChars(heroTitle2);
-    splitChars(contactTitle);
-
-    let heroAnimated = false;
-    // Hero entrance animation
-    const animateHeroEntrance = () => {
-      if (heroAnimated) return;
-      heroAnimated = true;
-      const tl = gsap.timeline();
-      tl.to('.hero-tag', { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' })
-        .to('.hero-title .char', { opacity: 1, y: '0%', rotateX: 0, stagger: 0.02, duration: 0.9, ease: 'power3.out' }, '-=0.6')
-        .to('.hero-sub', { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, '-=0.6')
-        .to('.hero-actions', { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, '-=0.6')
-        .to('.scroll-indicator', { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, '-=0.5');
-    };
-
-    if (typeof window !== 'undefined' && sessionStorage.getItem('preloaderShown')) {
-      animateHeroEntrance();
-    } else {
-      const handlePreloaderComplete = () => animateHeroEntrance();
-      window.addEventListener('preloaderComplete', handlePreloaderComplete);
-      var fallbackTimer = setTimeout(() => animateHeroEntrance(), 1800);
-    }
-
-    // GSAP ScrollTrigger Animations
-    document.querySelectorAll("[data-animate='fade-up']").forEach((el) => {
-      const delay = parseFloat(el.getAttribute('data-delay') || '0');
-      gsap.fromTo(
-        el,
-        { opacity: 0, y: 40 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.9,
-          delay,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: el,
-            start: 'top 95%',
-            toggleActions: 'play none none none',
-            onRefresh: (self) => {
-              if (self.progress > 0) {
-                gsap.set(el, { opacity: 1, y: 0 });
-              }
-            },
-          },
-        }
-      );
-    });
-
-    // Hero Parallax
-    gsap.to('.hero-content', {
-      scrollTrigger: {
-        trigger: '.hero',
-        start: 'top top',
-        end: 'bottom top',
-        scrub: true,
-      },
-      y: -100,
-      opacity: 0.2,
-    });
-
-    // Hero Orbs Parallax
-    document.querySelectorAll('.hero-orb[data-parallax]').forEach((orb) => {
-      const speed = parseFloat(orb.getAttribute('data-parallax') || '0.2');
-      gsap.to(orb, {
-        scrollTrigger: {
-          trigger: '.hero',
-          start: 'top top',
-          end: 'bottom top',
-          scrub: true,
-        },
-        y: (i, target) => -200 * speed,
-      });
-    });
-
-    // Philosophy Word Reveal
-    const philEl = document.querySelector('[data-reveal-words]');
-    if (philEl && !philEl.querySelector('.word')) {
-      const text = philEl.textContent.trim();
-      philEl.textContent = '';
-      philEl.setAttribute('aria-label', text);
-      text.split(/\s+/).forEach((w) => {
-        const wordSpan = document.createElement('span');
-        wordSpan.className = 'word';
-        const innerSpan = document.createElement('span');
-        innerSpan.className = 'word-inner';
-        innerSpan.textContent = w;
-        wordSpan.appendChild(innerSpan);
-        philEl.appendChild(wordSpan);
-      });
-
-      gsap.fromTo(
-        '.philosophy-text .word-inner',
-        { y: '110%' },
-        {
-          y: '0%',
-          stagger: 0.02,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: '.philosophy-text',
-            start: 'top 85%',
-            end: 'bottom 50%',
-            scrub: 1,
-            onRefresh: (self) => {
-              if (self.progress > 0) {
-                gsap.set('.philosophy-text .word-inner', { y: '0%' });
-              }
-            },
-          },
-        }
-      );
-
-      gsap.to('.philosophy-line', {
-        scrollTrigger: {
-          trigger: '.philosophy-text',
-          start: 'top 70%',
-          end: 'bottom 40%',
-          scrub: 1,
-        },
-        width: '200px',
-        ease: 'power3.out',
-      });
-    }
-
-    // Contact title character reveal
-    if (contactTitle) {
-      gsap.fromTo(
-        '.contact-title .char',
-        { opacity: 0, y: '100%', rotateX: -80 },
-        {
-          opacity: 1,
-          y: '0%',
-          rotateX: 0,
-          stagger: 0.03,
-          duration: 1,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: '.contact-title',
-            start: 'top 90%',
-            onRefresh: (self) => {
-              if (self.progress > 0) {
-                gsap.set('.contact-title .char', { opacity: 1, y: '0%', rotateX: 0 });
-              }
-            },
-          },
-        }
-      );
-    }
-
-    // Number counters
-    document.querySelectorAll('[data-count]').forEach((el) => {
-      const targetVal = parseInt(el.getAttribute('data-count'), 10);
-      gsap.to(
-        { val: 0 },
-        {
-          val: targetVal,
-          duration: 2,
-          ease: 'power2.out',
-          scrollTrigger: {
-            trigger: el,
-            start: 'top 90%',
-            once: true,
-          },
-          onUpdate: function () {
-            el.textContent = Math.round(this.targets()[0].val);
-          },
-        }
-      );
-    });
-
-    // Refresh ScrollTrigger after DOM setup
-    const refreshTimer = setTimeout(() => {
-      ScrollTrigger.refresh();
-      // Reveal any sections if URL contains a hash
-      if (window.location.hash) {
-        const hashEl = document.querySelector(window.location.hash);
-        if (hashEl) {
-          const animEls = hashEl.querySelectorAll("[data-animate='fade-up'], .char, .word-inner");
-          gsap.set(animEls, { opacity: 1, y: 0, rotateX: 0 });
-          hashEl.scrollIntoView({ behavior: 'smooth' });
-        }
-      }
-    }, 200);
-
-    // Magnetic elements interaction
-    if (window.matchMedia('(pointer: fine)').matches) {
-      document.querySelectorAll('[data-magnetic]').forEach((el) => {
-        const inner = el.querySelector('span') || el;
-        let magRaf = null;
-        let magX = 0;
-        let magY = 0;
-
-        const updateMag = () => {
-          if (!inner) return;
-          inner.style.transition = 'none';
-          inner.style.transform = `translate(${magX}px, ${magY}px)`;
-          magRaf = null;
-        };
-
-        const handleMove = (e) => {
-          const rect = el.getBoundingClientRect();
-          const centerX = rect.left + rect.width / 2;
-          const centerY = rect.top + rect.height / 2;
-          magX = (e.clientX - centerX) * 0.3;
-          magY = (e.clientY - centerY) * 0.3;
-          if (!magRaf) {
-            magRaf = requestAnimationFrame(updateMag);
-          }
-        };
-
-        const handleLeave = () => {
-          if (magRaf) {
-            cancelAnimationFrame(magRaf);
-            magRaf = null;
-          }
-          inner.style.transition = 'transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)';
-          inner.style.transform = 'translate(0px, 0px)';
-        };
-
-        el.addEventListener('mousemove', handleMove, { passive: true });
-        el.addEventListener('mouseleave', handleLeave, { passive: true });
-      });
-    }
-
-    return () => {
-      if (fallbackTimer) clearTimeout(fallbackTimer);
-      clearTimeout(refreshTimer);
-      ScrollTrigger.getAll().forEach((t) => t.kill());
-    };
-  }, []);
-
-  // Contact section canvas gradient mesh
-  useEffect(() => {
-    const canvas = contactCanvasRef.current;
-    if (!canvas) return;
-
-    const ctx = canvas.getContext('2d');
-    let w, h, time = 0, isVisible = false, rafId = null;
-
-    function resize() {
-      w = canvas.parentElement.offsetWidth || window.innerWidth;
-      h = canvas.parentElement.offsetHeight || window.innerHeight * 0.8;
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      canvas.width = w * dpr;
-      canvas.height = h * dpr;
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    }
-    resize();
-    window.addEventListener('resize', resize);
-
-    const colors = ['rgba(122,158,126,0.3)', 'rgba(200,169,110,0.2)', 'rgba(122,158,126,0.15)'];
-
-    function draw() {
-      if (!isVisible) {
-        rafId = null;
-        return;
-      }
-      ctx.clearRect(0, 0, w, h);
-      time += 0.003;
-
-      for (let i = 0; i < 3; i++) {
-        const x = (Math.sin(time + i * 2) * 0.3 + 0.5) * w;
-        const y = (Math.cos(time * 0.8 + i * 1.5) * 0.3 + 0.5) * h;
-        const radius = Math.min(w, h) * 0.5;
-
-        const grad = ctx.createRadialGradient(x, y, 0, x, y, radius);
-        grad.addColorStop(0, colors[i]);
-        grad.addColorStop(1, 'transparent');
-
-        ctx.fillStyle = grad;
-        ctx.fillRect(0, 0, w, h);
-      }
-      rafId = requestAnimationFrame(draw);
-    }
-
-    const obs = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          isVisible = e.isIntersecting;
-          if (isVisible && !rafId) draw();
-        });
-      },
-      { threshold: 0 }
-    );
-    obs.observe(canvas.parentElement || canvas);
-    draw();
-
-    return () => {
-      window.removeEventListener('resize', resize);
-      obs.disconnect();
-      if (rafId) cancelAnimationFrame(rafId);
-    };
-  }, []);
-
   return (
     <main>
+      <HomeAnimations />
       <WebGLBackground />
 
       {/* ─── HERO ─── */}
       <section id="hero" className="hero">
         <div className="hero-bg-wrapper">
-          <img src="/hero.jpg" alt="" className="hero-bg-image" />
+          <Image
+            src="/hero.jpg"
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+            quality={75}
+            className="hero-bg-image"
+          />
         </div>
         <div className="hero-orb hero-orb--1" data-parallax="0.1" aria-hidden="true" />
         <div className="hero-orb hero-orb--2" data-parallax="0.25" aria-hidden="true" />
@@ -561,9 +248,11 @@ export default function Home() {
         <div className="container about-grid">
           <div className="about-visual" data-animate="fade-up">
             <div className="about-image-wrap">
-              <img
+              <Image
                 src="/about.jpg"
                 alt="Therapeutic bodywork — balance and restoration"
+                width={800}
+                height={597}
                 className="about-image"
                 loading="lazy"
                 decoding="async"
@@ -578,9 +267,11 @@ export default function Home() {
             {/* BIO HEADSHOT + NAME HEADER */}
             <div className="about-bio-header">
               <div className="about-headshot-wrap">
-                <img
+                <Image
                   src="/david-headshot-561x403.jpg"
                   alt="David Goodrich, LMT"
+                  width={561}
+                  height={403}
                   className="about-headshot"
                   loading="lazy"
                   decoding="async"
@@ -711,7 +402,7 @@ export default function Home() {
 
       {/* ─── CONTACT ─── */}
       <section id="contact" className="section contact">
-        <canvas ref={contactCanvasRef} id="contact-gradient" aria-hidden="true" />
+        <ContactCanvas />
         <div className="container contact-inner">
           <span className="section-tag" data-animate="fade-up">
             Get In Touch
