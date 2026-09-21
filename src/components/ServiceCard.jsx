@@ -3,7 +3,15 @@
 import { useEffect, useRef } from 'react';
 import Link from 'next/link';
 
-export default function ServiceCard({ pattern, title, desc, link, delay = 0 }) {
+export default function ServiceCard({
+  pattern,
+  title,
+  desc,
+  link,
+  delay = 0,
+  prices = [],
+  bookLink = 'https://www.massagebook.com/therapists/GoodrichMassage',
+}) {
   const canvasRef = useRef(null);
   const cardRef = useRef(null);
 
@@ -173,9 +181,35 @@ export default function ServiceCard({ pattern, title, desc, link, delay = 0 }) {
       <div className="service-content">
         <h3 className="service-name" dangerouslySetInnerHTML={{ __html: title }} />
         <p className="service-desc">{desc}</p>
-        <Link href={link} className="service-cta" data-magnetic>
-          Learn more <span className="arrow">&rarr;</span>
-        </Link>
+
+        {prices && prices.length > 0 && (
+          <div className="service-card-pricing-wrap">
+            <span className="service-pricing-heading">Session Rates</span>
+            <div className="service-card-pricing">
+              {prices.map((item, idx) => (
+                <div key={idx} className="service-card-price-pill">
+                  <span className="price-pill-duration">{item.duration}</span>
+                  <span className="price-pill-amount">{item.price}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <div className="service-card-footer">
+          <Link href={link} className="service-cta" data-magnetic>
+            <span>Learn More <span className="arrow">&rarr;</span></span>
+          </Link>
+          <a
+            href={bookLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="service-book-btn"
+            data-magnetic
+          >
+            <span>Book Now</span>
+          </a>
+        </div>
       </div>
     </article>
   );

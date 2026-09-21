@@ -23,6 +23,7 @@ export default function Footer() {
           <Link href="/services">Services</Link>
           <Link href="/memberships">Memberships</Link>
           <Link href="/#about">About</Link>
+          <Link href="/#faq">FAQ</Link>
           <Link href="/#contact">Contact</Link>
           <a
             href="https://www.massagebook.com/therapists/GoodrichMassage/gift-certificates?src=external-certificates"

@@ -53,10 +53,16 @@ export default function Navbar() {
 
   return (
     <header id="navbar" className={scrolled ? 'scrolled' : ''} role="banner">
-      <Link href="/" className="nav-logo" data-magnetic onClick={(e) => handleNavClick(e, 'hero')}>
-        <Image src="/logo.png" alt="Goodrich Therapeutics" width={32} height={51} priority className="nav-logo-img" />
-        Goodrich<span className="logo-dot">.</span>
-      </Link>
+      <div className="nav-brand-group">
+        <Link href="/" className="nav-logo" data-magnetic onClick={(e) => handleNavClick(e, 'hero')}>
+          <Image src="/logo.png" alt="Goodrich Therapeutics" width={32} height={51} priority className="nav-logo-img" />
+          Goodrich<span className="logo-dot">.</span>
+        </Link>
+        <span className="nav-location-pill" title="Serving Cornelius & Lake Norman, NC">
+          <span className="nav-location-dot" aria-hidden="true" />
+          Cornelius &bull; Lake Norman
+        </span>
+      </div>
       <nav aria-label="Main navigation">
         <Link
           href="/#philosophy"
@@ -87,6 +93,14 @@ export default function Navbar() {
           onClick={(e) => handleNavClick(e, 'testimonials')}
         >
           Stories
+        </Link>
+        <Link
+          href="/#faq"
+          className="nav-link"
+          data-magnetic
+          onClick={(e) => handleNavClick(e, 'faq')}
+        >
+          FAQ
         </Link>
         <Link
           href="/#contact"

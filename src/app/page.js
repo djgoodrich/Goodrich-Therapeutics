@@ -1,14 +1,33 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import ServiceCard from '@/components/ServiceCard';
+import FaqAccordion from '@/components/FaqAccordion';
+import { faqData } from '@/data/faqData';
 import Footer from '@/components/Footer';
 import HomeAnimations from '@/components/HomeAnimations';
 import ContactCanvas from '@/components/ContactCanvas';
 import WebGLBackground from '@/components/WebGLBackground';
 
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqData.map((item) => ({
+    '@type': 'Question',
+    name: item.question,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: item.answer,
+    },
+  })),
+};
+
 export default function Home() {
   return (
     <main>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
       <HomeAnimations />
       <WebGLBackground />
 
@@ -30,6 +49,10 @@ export default function Home() {
         <div className="hero-orb hero-orb--3" data-parallax="0.15" aria-hidden="true" />
 
         <div className="hero-content">
+          <div className="hero-service-badge" data-animate="fade-up">
+            <span className="hero-service-pin" aria-hidden="true">📍</span>
+            <span>Serving Cornelius, Davidson, Huntersville, Mooresville &amp; Lake Norman</span>
+          </div>
           <span className="hero-tag">Massage Therapy &amp; Structural Integration</span>
           <h1 className="hero-title">
             <span className="title-line">Goodrich</span>
@@ -80,7 +103,7 @@ export default function Home() {
             What We Do
           </span>
           <h2 className="section-title" data-animate="fade-up">
-            Services
+            Services &amp; Pricing
           </h2>
           <div className="services-grid">
             <ServiceCard
@@ -89,6 +112,11 @@ export default function Home() {
               desc="Specialized technique targeting deeper layers of muscle and connective tissue to relieve chronic tension and deep-seated pain patterns."
               link="/services#deep-tissue"
               delay={0}
+              prices={[
+                { duration: '60 Min', price: '$90' },
+                { duration: '90 Min', price: '$125' },
+                { duration: '2 Hr', price: '$160' },
+              ]}
             />
             <ServiceCard
               pattern="geometry"
@@ -96,6 +124,9 @@ export default function Home() {
               desc="A holistic approach that realigns and balances the body's structure within its gravitational field, improving posture and alleviating chronic pain."
               link="/services#structural-integration"
               delay={0.15}
+              prices={[
+                { duration: '90 Min', price: '$135' },
+              ]}
             />
             <ServiceCard
               pattern="flow"
@@ -103,6 +134,11 @@ export default function Home() {
               desc="A gentle, relaxing massage using long, flowing strokes to ease muscle tension, improve circulation, and promote deep relaxation."
               link="/services#swedish-massage"
               delay={0.3}
+              prices={[
+                { duration: '60 Min', price: '$90' },
+                { duration: '90 Min', price: '$125' },
+                { duration: '2 Hr', price: '$160' },
+              ]}
             />
           </div>
         </div>
@@ -395,6 +431,42 @@ export default function Home() {
                 <cite className="testimonial-author">Elena R.</cite>
                 <span className="testimonial-service">Swedish Massage</span>
               </footer>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── FAQ / OBJECTION-HANDLING ─── */}
+      <section id="faq" className="section faq-section">
+        <div className="container">
+          <div className="faq-header-wrap">
+            <span className="section-tag" data-animate="fade-up">
+              Got Questions?
+            </span>
+            <h2 className="section-title" data-animate="fade-up">
+              Frequently Asked Questions
+            </h2>
+            <p className="faq-subheading" data-animate="fade-up">
+              Everything you need to know about structural integration, massage sessions, policies, and what to expect at Goodrich Therapeutics in Cornelius, NC.
+            </p>
+          </div>
+
+          <div data-animate="fade-up">
+            <FaqAccordion />
+          </div>
+
+          <div className="faq-cta-prompt" data-animate="fade-up">
+            <h3>Have a specific question about your pain or condition?</h3>
+            <p>
+              David is happy to discuss your unique symptoms, movement patterns, or treatment goals before you schedule.
+            </p>
+            <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', flexWrap: 'wrap' }}>
+              <a href="tel:+17049311074" className="btn btn--ghost btn--sm" data-magnetic>
+                <span>Call (704) 931-1074</span>
+              </a>
+              <a href="mailto:GoodrichTherapeutics@gmail.com" className="btn btn--outline btn--sm" data-magnetic>
+                <span>Email David</span>
+              </a>
             </div>
           </div>
         </div>

@@ -39,7 +39,8 @@ export default function HomeAnimations() {
       if (heroAnimated || isMobile) return;
       heroAnimated = true;
       const tl = gsap.timeline();
-      tl.to('.hero-tag', { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' })
+      tl.to('.hero-service-badge', { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' })
+        .to('.hero-tag', { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, '-=0.6')
         .to('.hero-title .char', { opacity: 1, y: '0%', rotateX: 0, stagger: 0.02, duration: 0.9, ease: 'power3.out' }, '-=0.6')
         .to('.hero-sub', { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, '-=0.6')
         .to('.hero-actions', { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, '-=0.6')
