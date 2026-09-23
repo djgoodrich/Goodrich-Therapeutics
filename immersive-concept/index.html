@@ -1,0 +1,1157 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Goodrich Therapeutics — Massage Therapy &amp; Structural Integration · Cornelius, NC</title>
+<meta name="description" content="Precision bodywork in Cornelius, NC. Structural Integration, Deep Tissue and Swedish massage with David Goodrich, LMT — 20+ years of practice." />
+<meta name="theme-color" content="#0c0c0e" />
+<link rel="icon" href="../public/favicon.ico" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter+Tight:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+<!-- Tailwind (v4 browser build) -->
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<style type="text/tailwindcss">
+  @theme {
+    --color-obsidian: #0c0c0e;
+    --color-ink: #141417;
+    --color-linen: #ede6da;
+    --color-sand: #b8a488;
+    --color-slate: #5b6670;
+    --color-mist: #8d8a84;
+    --font-serif: "Cormorant Garamond", ui-serif, Georgia, serif;
+    --font-sans: "Inter Tight", ui-sans-serif, system-ui, sans-serif;
+  }
+</style>
+
+<style>
+  /* ───────── Tokens ───────── */
+  :root{
+    --bg:#0c0c0e;
+    --linen:237 230 218;
+    --accent:184 164 136;      /* live-updated by the Sensory Selector */
+    --accent-2:74 85 96;
+    --line:rgba(237,230,218,.12);
+    --ease-out:cubic-bezier(.16,1,.3,1);
+  }
+  html{background:var(--bg);color:rgb(var(--linen));-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  body{background:var(--bg);font-family:"Inter Tight",system-ui,sans-serif;overflow-x:hidden}
+  html.has-smooth{scroll-behavior:auto}
+  ::selection{background:rgb(var(--accent) / .35);color:#fff}
+  a{color:inherit;text-decoration:none}
+  img{display:block;max-width:100%}
+
+  /* ───────── Fixed render layers ───────── */
+  #aura,#fiber{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
+  #aura{z-index:0}
+  #fiber{z-index:1}
+  .page{position:relative;z-index:2}
+
+  /* ───────── Type ───────── */
+  .display{font-family:"Cormorant Garamond",serif;font-weight:300;letter-spacing:-.02em;line-height:.9}
+  .eyebrow{font-size:11px;letter-spacing:.28em;text-transform:uppercase;font-weight:500;color:rgb(var(--linen) / .6)}
+  .num{font-variant-numeric:tabular-nums}
+  .accent{color:rgb(var(--accent))}
+
+  /* line mask reveal */
+  .line{display:block;overflow:hidden;padding-bottom:.08em;margin-bottom:-.08em}
+  .line-inner{display:block;will-change:transform}
+
+  /* ───────── Loader / veil ───────── */
+  #loader{position:fixed;inset:0;z-index:100;background:#0a0a0b;display:grid;place-items:center;clip-path:inset(0 0 0 0)}
+  #loader .ring{width:120px;height:120px;border-radius:50%;border:1px solid rgb(var(--linen) / .25);position:relative}
+  #loader .ring::after{content:"";position:absolute;inset:18px;border-radius:50%;background:radial-gradient(circle at 40% 35%,rgb(var(--accent) / .7),transparent 70%);animation:breathe 4s ease-in-out infinite}
+  @keyframes breathe{0%,100%{transform:scale(.72);opacity:.55}50%{transform:scale(1);opacity:1}}
+  #veil{position:fixed;inset:0;z-index:90;pointer-events:none;transform:scaleY(0);transform-origin:bottom;
+    background:linear-gradient(180deg,#0b0b0d 0%,rgb(var(--accent-2)) 55%,rgb(var(--accent)) 100%)}
+
+  /* ───────── Cursor ───────── */
+  .cursor{position:fixed;top:0;left:0;z-index:95;pointer-events:none;border-radius:50%;transform:translate3d(-100px,-100px,0)}
+  .cursor-dot{width:6px;height:6px;margin:-3px 0 0 -3px;background:rgb(var(--linen))}
+  .cursor-ring{width:38px;height:38px;margin:-19px 0 0 -19px;border:1px solid rgb(var(--linen) / .45);
+    transition:width .5s var(--ease-out),height .5s var(--ease-out),margin .5s var(--ease-out),background .4s,border-color .4s;display:grid;place-items:center}
+  .cursor-ring span{font-size:9px;letter-spacing:.22em;text-transform:uppercase;opacity:0;transition:opacity .3s}
+  body.c-hover .cursor-ring{width:64px;height:64px;margin:-32px 0 0 -32px;background:rgb(var(--accent) / .12);border-color:rgb(var(--accent) / .7)}
+  body.c-drag .cursor-ring{width:84px;height:84px;margin:-42px 0 0 -42px;background:rgb(var(--linen) / .06)}
+  body.c-drag .cursor-ring span{opacity:.9}
+  @media (hover:none),(pointer:coarse){.cursor{display:none}}
+  @media (hover:hover) and (pointer:fine){body.custom-cursor,body.custom-cursor a,body.custom-cursor button{cursor:none}}
+
+  /* ───────── Buttons ───────── */
+  .btn{position:relative;display:inline-flex;align-items:center;gap:.8rem;height:52px;padding:0 1.6rem;border-radius:999px;
+    font-size:13px;letter-spacing:.14em;text-transform:uppercase;font-weight:500;overflow:hidden;isolation:isolate;
+    transition:color .5s var(--ease-out),border-color .5s}
+  .btn::before{content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;transform:translateY(101%);transition:transform .6s var(--ease-out)}
+  .btn:hover::before,.btn:focus-visible::before{transform:none}
+  .btn-solid{background:rgb(var(--linen));color:#111}
+  .btn-solid::before{background:rgb(var(--accent))}
+  .btn-ghost{border:1px solid rgb(var(--linen) / .28);color:rgb(var(--linen))}
+  .btn-ghost::before{background:rgb(var(--linen))}
+  .btn-ghost:hover{color:#111}
+  .btn .arrow{transition:transform .5s var(--ease-out)}
+  .btn:hover .arrow{transform:translateX(4px)}
+  :focus-visible{outline:1px solid rgb(var(--accent));outline-offset:4px}
+
+  /* ───────── Nav ───────── */
+  #nav{transition:transform .7s var(--ease-out),background .5s,backdrop-filter .5s}
+  #nav.is-hidden{transform:translateY(-110%)}
+  #nav.is-solid{background:rgb(12 12 14 / .55);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+  .nav-link{position:relative;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:rgb(var(--linen) / .7);transition:color .3s}
+  .nav-link::after{content:"";position:absolute;left:0;right:0;bottom:-6px;height:1px;background:rgb(var(--accent));transform:scaleX(0);transform-origin:right;transition:transform .6s var(--ease-out)}
+  .nav-link:hover{color:rgb(var(--linen))}
+  .nav-link:hover::after{transform:scaleX(1);transform-origin:left}
+
+  /* ───────── Hero ───────── */
+  .breath-line{width:1px;height:56px;background:linear-gradient(rgb(var(--linen) / .6),transparent);transform-origin:top;animation:breathLine 8s ease-in-out infinite}
+  @keyframes breathLine{0%,100%{transform:scaleY(.25)}50%{transform:scaleY(1)}}
+
+  /* ───────── Kinetic manifesto ───────── */
+  .kinetic{height:160vh}                 /* ~0.6 screen of pinned travel, down from 1.8 */
+  @media (max-width:767px){               /* phones: no pin, the quote scrolls naturally */
+    .kinetic{height:auto}
+    .kinetic>.sticky{position:relative;height:auto;padding:7rem 0 5rem}
+  }
+  .kinetic .word{opacity:.12;transition:none}
+  .ghost-word{font-family:"Cormorant Garamond",serif;font-weight:300;font-style:italic;font-size:clamp(7rem,30vw,30rem);line-height:.8;
+    color:transparent;-webkit-text-stroke:1px rgb(var(--linen) / .09);white-space:nowrap;letter-spacing:-.04em}
+  .ghost-fill{position:absolute;inset:0;color:rgb(var(--accent) / .16);-webkit-text-stroke:0;clip-path:inset(100% 0 0 0)}
+
+  /* ───────── Sensory selector ───────── */
+  #selector-stage{touch-action:none;cursor:grab}
+  #selector-stage:active{cursor:grabbing}
+  .node-btn{position:absolute;transform:translate(-50%,34px);text-align:center;white-space:nowrap;padding:14px 10px}
+  .node-btn .n-name{font-family:"Cormorant Garamond",serif;font-size:clamp(1.25rem,2vw,1.75rem);font-weight:400;line-height:1;transition:color .5s,opacity .5s;opacity:.55}
+  .node-btn .n-sub{display:block;margin-top:6px;font-size:10px;letter-spacing:.24em;text-transform:uppercase;opacity:.4;transition:opacity .5s}
+  .node-btn.is-active .n-name{opacity:1;color:rgb(var(--accent))}
+  .node-btn.is-active .n-sub,.node-btn:hover .n-sub{opacity:.85}
+  .node-btn:hover .n-name{opacity:.95}
+  .meter{display:flex;gap:4px}
+  .meter i{flex:1;height:3px;border-radius:2px;background:rgb(var(--linen) / .12);transition:background .6s var(--ease-out)}
+  .meter i.on{background:rgb(var(--accent))}
+
+  /* ───────── Matrix ───────── */
+  .m-row{position:relative;border-top:1px solid var(--line);--mx:50%;--my:50%}
+  .m-row:last-child{border-bottom:1px solid var(--line)}
+  .m-row::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .6s var(--ease-out);
+    background:radial-gradient(600px circle at var(--mx) var(--my),rgb(var(--accent) / .10),transparent 60%)}
+  .m-row:hover::before,.m-row.is-open::before{opacity:1}
+  .m-head{width:100%;text-align:left;display:grid;align-items:center;gap:1.5rem;padding:2rem 0;grid-template-columns:3rem 1fr auto}
+  @media (min-width:1024px){.m-head{grid-template-columns:4rem minmax(0,1.6fr) 1fr 1fr 3rem;padding:2.6rem 0}}
+  .m-title{font-family:"Cormorant Garamond",serif;font-weight:300;font-size:clamp(2.2rem,5vw,4.4rem);line-height:.95;letter-spacing:-.02em;transition:transform .8s var(--ease-out)}
+  .m-row:hover .m-title{transform:translateX(12px)}
+  .m-plus{width:44px;height:44px;border-radius:50%;border:1px solid rgb(var(--linen) / .25);position:relative;justify-self:end;transition:transform .7s var(--ease-out),background .4s,border-color .4s}
+  .m-plus::before,.m-plus::after{content:"";position:absolute;left:50%;top:50%;width:14px;height:1px;background:currentColor;transform:translate(-50%,-50%)}
+  .m-plus::after{transform:translate(-50%,-50%) rotate(90deg)}
+  .m-row.is-open .m-plus{transform:rotate(135deg);background:rgb(var(--accent) / .15);border-color:rgb(var(--accent))}
+  .m-body{height:0;overflow:hidden}
+  .tissue-layer{position:relative;height:30px;border-radius:3px;background:rgb(var(--linen) / .045);overflow:hidden;display:flex;align-items:center;padding:0 12px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:rgb(var(--linen) / .5)}
+  .tissue-layer .fill{position:absolute;inset:0;transform:scaleX(0);transform-origin:left;background:linear-gradient(90deg,rgb(var(--accent) / .55),rgb(var(--accent) / .12))}
+  .tissue-layer span{position:relative}
+  .chip{display:inline-flex;flex-direction:column;gap:2px;padding:12px 16px;border:1px solid rgb(var(--linen) / .16);border-radius:12px;min-width:96px;transition:border-color .4s,background .4s}
+  .chip:hover{border-color:rgb(var(--accent));background:rgb(var(--accent) / .08)}
+
+  /* ───────── Misc ───────── */
+  .hairline{height:1px;background:var(--line)}
+  .reveal-clip{clip-path:inset(0 0 100% 0)}
+  /* Portrait: toned to the live palette so any photo sits in the room; warms to full colour on hover */
+  .portrait{filter:grayscale(1) contrast(1.08) brightness(.92);transition:filter 1.2s var(--ease-out),transform 1.6s var(--ease-out)}
+  .portrait-tint{background:rgb(var(--accent));mix-blend-mode:color;opacity:.35;transition:opacity 1.2s var(--ease-out)}
+  .portrait-wrap:hover .portrait,.portrait-wrap:focus-within .portrait{filter:grayscale(0) contrast(1) brightness(1);transform:scale(1.03)}
+  .portrait-wrap:hover .portrait-tint{opacity:0}
+  .quote-stack{display:grid}
+  .quote-stack>*{grid-area:1/1}
+  .grain{position:fixed;inset:-50%;z-index:3;pointer-events:none;opacity:.05;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+    .kinetic{height:auto}.kinetic .word{opacity:1!important}
+  }
+</style>
+</head>
+
+<body>
+  <!-- Render layers -->
+  <canvas id="aura" aria-hidden="true"></canvas>
+  <canvas id="fiber" aria-hidden="true"></canvas>
+  <div class="grain" aria-hidden="true"></div>
+
+  <!-- Entry transition -->
+  <div id="loader" aria-hidden="true">
+    <div class="flex flex-col items-center gap-8">
+      <div class="ring"></div>
+      <div class="text-center">
+        <div class="display text-3xl tracking-tight">Goodrich <em class="italic">Therapeutics</em></div>
+        <div class="eyebrow mt-3"><span id="loader-cue">Inhale</span> · <span id="loader-count" class="num">00</span></div>
+      </div>
+    </div>
+  </div>
+  <div id="veil" aria-hidden="true"></div>
+
+  <!-- Cursor -->
+  <div class="cursor cursor-ring" aria-hidden="true"><span>Drag</span></div>
+  <div class="cursor cursor-dot" aria-hidden="true"></div>
+
+  <!-- ───────── NAV ───────── -->
+  <header id="nav" class="fixed inset-x-0 top-0 z-50">
+    <nav class="mx-auto flex max-w-[1600px] items-center justify-between px-5 py-5 md:px-10" aria-label="Primary">
+      <a href="#top" data-veil class="group flex items-baseline gap-2" aria-label="Goodrich Therapeutics — home">
+        <span class="display text-2xl">Goodrich</span>
+        <span class="eyebrow hidden sm:inline">Therapeutics</span>
+      </a>
+      <div class="hidden items-center gap-10 lg:flex">
+        <a class="nav-link" href="#focus" data-veil>Focus</a>
+        <a class="nav-link" href="#matrix" data-veil>Therapeutics</a>
+        <a class="nav-link" href="#practitioner" data-veil>Practitioner</a>
+        <a class="nav-link" href="#visit" data-veil>Visit</a>
+      </div>
+      <a class="btn btn-ghost !h-11 !px-5" href="https://www.massagebook.com/therapists/GoodrichMassage" target="_blank" rel="noopener" data-magnetic>
+        <span>Book</span><span class="arrow" aria-hidden="true">↗</span>
+      </a>
+    </nav>
+  </header>
+
+  <main class="page" id="top">
+
+    <!-- ───────── HERO ───────── -->
+    <section id="hero" class="relative flex min-h-[100svh] flex-col justify-end px-5 pb-10 pt-28 md:px-10 md:pb-14">
+      <div class="mx-auto w-full max-w-[1600px]">
+        <p class="eyebrow hero-fade mb-8 flex flex-wrap items-center gap-x-4 gap-y-2">
+          <span class="hidden sm:inline">Massage Therapy &amp; Structural Integration</span>
+          <span class="hidden h-px w-10 bg-current opacity-40 sm:block"></span>
+          <span>Cornelius · Lake Norman, NC</span>
+        </p>
+
+        <h1 class="display text-[clamp(3.1rem,min(9.2vw,13.2vh),10rem)]" aria-label="Release what the body has been holding.">
+          <span class="line"><span class="line-inner">Release what</span></span>
+          <span class="line"><span class="line-inner">the body <em class="italic accent">has been</em></span></span>
+          <span class="line"><span class="line-inner"><em class="italic">holding.</em></span></span>
+        </h1>
+
+        <div class="mt-8 grid gap-10 md:mt-10 md:grid-cols-12 md:items-end">
+          <div class="hero-fade hidden md:col-span-4 md:block">
+            <p class="eyebrow">Fig. 01 — Myofascial bundle</p>
+            <p class="mt-2 text-sm text-linen/50">Live render · move to release tension</p>
+            <div class="mt-4 flex items-center gap-4 text-sm">
+              <span class="eyebrow !tracking-[.2em]">Tension</span>
+              <div class="h-px flex-1 max-w-40 bg-linen/15"><div id="tension-bar" class="h-px bg-[rgb(var(--accent))]" style="width:72%"></div></div>
+              <span id="tension-val" class="num w-10 text-linen/70">0.72</span>
+            </div>
+          </div>
+
+          <div class="hero-fade md:col-span-5 md:col-start-8">
+            <p class="max-w-md text-[17px] leading-relaxed text-linen/70">
+              Precision bodywork that realigns posture, unwinds chronic pain and returns the body to effortless balance — with David Goodrich, LMT, and twenty years of hands-on practice.
+            </p>
+            <div class="mt-8 flex flex-wrap gap-3">
+              <a class="btn btn-solid" href="https://www.massagebook.com/therapists/GoodrichMassage" target="_blank" rel="noopener" data-magnetic>
+                <span>Reserve a session</span><span class="arrow" aria-hidden="true">→</span>
+              </a>
+              <a class="btn btn-ghost" href="#focus" data-veil data-magnetic><span>Find your focus</span></a>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-fade mt-10 flex items-center justify-between border-t border-linen/10 pt-5 text-linen/50">
+          <span class="eyebrow">Scroll</span>
+          <div class="flex items-center gap-3"><div class="breath-line"></div><span id="breath-cue" class="eyebrow w-16">Inhale</span></div>
+          <span class="eyebrow num">NC LMT #7796</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────── KINETIC MANIFESTO ───────── -->
+    <section id="philosophy" class="kinetic relative" aria-label="Philosophy">
+      <div class="sticky top-0 flex h-[100svh] items-center overflow-hidden">
+        <div class="pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2" aria-hidden="true">
+          <div id="ghost" class="ghost-word relative">unwind<span class="ghost-fill">unwind</span></div>
+        </div>
+        <div class="relative mx-auto w-full max-w-[1600px] px-5 md:px-10">
+          <p class="eyebrow mb-10">(02) — Philosophy</p>
+          <p id="manifesto" class="display max-w-[22ch] text-[clamp(2rem,5.2vw,5.4rem)] !leading-[1.02]">
+            The body keeps an honest record — of posture, of stress, of every long drive and restless night. Our work is to read it closely, and gently rewrite it.
+          </p>
+          <div class="mt-14 overflow-hidden whitespace-nowrap" aria-hidden="true">
+            <div id="kinetic-strip" class="display inline-block text-[clamp(1.4rem,2.6vw,2.4rem)] italic text-linen/35">
+              Structural Integration &nbsp;—&nbsp; Deep Tissue &nbsp;—&nbsp; Swedish &nbsp;—&nbsp; Posture &nbsp;—&nbsp; Fascia &nbsp;—&nbsp; Relief &nbsp;—&nbsp; Structural Integration &nbsp;—&nbsp; Deep Tissue &nbsp;—&nbsp; Swedish &nbsp;—&nbsp; Posture &nbsp;—&nbsp; Fascia &nbsp;—&nbsp; Relief
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────── SENSORY SELECTOR ───────── -->
+    <section id="focus" class="relative px-5 py-28 md:px-10 md:py-40">
+      <div class="mx-auto max-w-[1600px]">
+        <div class="mb-14 grid gap-8 md:grid-cols-12">
+          <p class="eyebrow md:col-span-3">(03) — Sensory Selector</p>
+          <h2 class="display md:col-span-9 text-[clamp(2.6rem,6vw,6rem)]">
+            <span class="line"><span class="line-inner">Drag the light toward</span></span>
+            <span class="line"><span class="line-inner">what your body <em class="italic accent">needs.</em></span></span>
+          </h2>
+        </div>
+
+        <div class="grid gap-10 lg:grid-cols-12">
+          <div class="relative lg:col-span-7">
+            <div id="selector-wrap" class="relative h-[62vh] min-h-[420px] max-h-[680px] overflow-hidden rounded-[28px] border border-linen/10 bg-black/20">
+              <canvas id="selector-stage" class="absolute inset-0 h-full w-full" aria-hidden="true"></canvas>
+              <div id="node-layer" role="radiogroup" aria-label="Choose a therapeutic focus"></div>
+              <p class="eyebrow pointer-events-none absolute bottom-5 left-6 !text-[10px] text-linen/40">Drag the orb · or tap a focus</p>
+              <p class="eyebrow pointer-events-none absolute right-6 top-5 !text-[10px] text-linen/40 num" id="sel-coords">x 0.50 · y 0.50</p>
+            </div>
+          </div>
+
+          <aside id="focus-panel" class="lg:col-span-5 flex flex-col justify-between rounded-[28px] border border-linen/10 bg-white/[.02] p-7 md:p-10" aria-live="polite">
+            <div data-panel>
+              <p class="eyebrow" data-f="service">Your focus</p>
+              <h3 class="display mt-4 text-[clamp(2.4rem,4vw,3.8rem)]" data-f="name">Choose a direction</h3>
+              <p class="mt-3 font-serif text-2xl italic text-linen/60" data-f="tagline">Every body is different. Start where it feels right.</p>
+              <p class="mt-6 max-w-md leading-relaxed text-linen/65" data-f="desc">Move the orb toward a focus. The room will shift with you — colour, light and pace all follow your choice.</p>
+
+              <dl class="mt-9 grid grid-cols-2 gap-x-8 gap-y-6">
+                <div><dt class="eyebrow !text-[10px]">Pressure depth</dt><dd class="mt-3 meter" data-f="depth"><i></i><i></i><i></i><i></i><i></i></dd></div>
+                <div><dt class="eyebrow !text-[10px]">Pace</dt><dd class="mt-2 text-linen/80" data-f="pace">—</dd></div>
+                <div><dt class="eyebrow !text-[10px]">Nervous system</dt><dd class="mt-2 text-linen/80" data-f="ns">—</dd></div>
+                <div><dt class="eyebrow !text-[10px]">Sessions</dt><dd class="mt-2 text-linen/80 num" data-f="rates">—</dd></div>
+              </dl>
+            </div>
+            <div class="mt-10 flex flex-wrap gap-3">
+              <a class="btn btn-solid" data-f="book" href="https://www.massagebook.com/therapists/GoodrichMassage" target="_blank" rel="noopener" data-magnetic>
+                <span>Book this focus</span><span class="arrow" aria-hidden="true">→</span>
+              </a>
+              <a class="btn btn-ghost" href="#matrix" data-veil><span>Compare all</span></a>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────── THERAPEUTICS MATRIX ───────── -->
+    <section id="matrix" class="relative px-5 py-28 md:px-10 md:py-40">
+      <div class="mx-auto max-w-[1600px]">
+        <div class="mb-16 grid gap-8 md:grid-cols-12 md:items-end">
+          <p class="eyebrow md:col-span-3">(04) — The Therapeutics</p>
+          <h2 class="display md:col-span-6 text-[clamp(2.6rem,6vw,6rem)]">
+            <span class="line"><span class="line-inner">Three depths.</span></span>
+            <span class="line"><span class="line-inner"><em class="italic">One</em> intention.</span></span>
+          </h2>
+          <p class="text-linen/60 md:col-span-3 leading-relaxed">Open any therapy to see how deep it works, what it changes physiologically, and when you can begin.</p>
+        </div>
+
+        <div class="hidden lg:grid grid-cols-[4rem_minmax(0,1.6fr)_1fr_1fr_3rem] gap-6 pb-4 eyebrow !text-[10px] text-linen/40">
+          <span>No.</span><span>Therapy</span><span>Depth</span><span>Sessions</span><span></span>
+        </div>
+        <div id="matrix-rows"></div>
+
+        <div class="mt-16 grid gap-6 rounded-[28px] border border-linen/10 p-7 md:grid-cols-12 md:items-center md:p-10">
+          <div class="md:col-span-7">
+            <p class="eyebrow">Memberships</p>
+            <p class="display mt-3 text-4xl md:text-5xl">Relief that <em class="italic accent">compounds.</em></p>
+            <p class="mt-4 max-w-xl text-linen/60 leading-relaxed">Monthly Wellness (60 min) or Deep Restorative (90 min). Member rates on extra sessions, roll-over credits and priority weekend booking.</p>
+          </div>
+          <div class="md:col-span-5 md:justify-self-end">
+            <a class="btn btn-ghost" href="https://www.massagebook.com/therapists/GoodrichMassage/deals" target="_blank" rel="noopener" data-magnetic><span>View memberships</span><span class="arrow" aria-hidden="true">↗</span></a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────── PRACTITIONER ───────── -->
+    <section id="practitioner" class="relative px-5 py-28 md:px-10 md:py-40">
+      <div class="mx-auto grid max-w-[1600px] gap-14 lg:grid-cols-12">
+        <div class="lg:col-span-5 lg:self-center">
+          <div class="portrait-wrap reveal-clip relative aspect-[561/403] overflow-hidden rounded-[28px] bg-ink">
+            <img class="portrait h-full w-full object-cover object-[50%_35%]" src="../public/david-headshot-561x403.jpg" width="561" height="403" alt="Portrait of David Goodrich, LMT" loading="lazy" decoding="async" />
+            <div class="portrait-tint pointer-events-none absolute inset-0" aria-hidden="true"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-obsidian/70 via-transparent"></div>
+            <p class="eyebrow absolute bottom-6 left-6">Fig. 02 — David Goodrich, LMT</p>
+          </div>
+        </div>
+        <div class="lg:col-span-6 lg:col-start-7 flex flex-col justify-center">
+          <p class="eyebrow">(05) — Practitioner</p>
+          <h2 class="display mt-6 text-[clamp(2.8rem,6vw,6rem)]">
+            <span class="line"><span class="line-inner">David Goodrich,</span></span>
+            <span class="line"><span class="line-inner"><em class="italic accent">LMT</em></span></span>
+          </h2>
+          <p class="mt-8 max-w-xl text-lg leading-relaxed text-linen/70">For over twenty years David has specialised in Structural Integration and deep-tissue bodywork — pairing clinical precision with an intuitive read of the body's fascial network.</p>
+          <p class="mt-4 max-w-xl leading-relaxed text-linen/55">From chronic neck pain to athletic recovery, his clients come to him for lasting change: freer movement, taller posture, and a body that finally feels like its own again.</p>
+
+          <div class="mt-12 grid grid-cols-3 border-t border-linen/10 pt-8">
+            <div><div class="display text-5xl md:text-6xl num"><span data-count="20">0</span><span class="accent">+</span></div><p class="eyebrow mt-3 !text-[10px]">Years of practice</p></div>
+            <div><div class="display text-5xl md:text-6xl num"><span data-count="1000">0</span><span class="accent">+</span></div><p class="eyebrow mt-3 !text-[10px]">Clients helped</p></div>
+            <div><div class="display text-5xl md:text-6xl num"><span data-count="5" data-decimals="1">0</span></div><p class="eyebrow mt-3 !text-[10px]">MassageBook rating</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────── WORDS ───────── -->
+    <section id="words" class="relative px-5 py-28 md:px-10 md:py-36">
+      <div class="mx-auto max-w-[1300px] text-center">
+        <p class="eyebrow">(06) — Words of restoration</p>
+        <div class="quote-stack mt-12" id="quotes">
+          <figure>
+            <blockquote class="display text-[clamp(1.9rem,4.2vw,3.8rem)] !leading-[1.08]">“I suffer from constant neck issues and he gets rid of the pain. He always whips my body into shape.”</blockquote>
+            <figcaption class="eyebrow mt-8">Melissa M. — Therapeutic massage</figcaption>
+          </figure>
+          <figure>
+            <blockquote class="display text-[clamp(1.9rem,4.2vw,3.8rem)] !leading-[1.08]">“I am very active, and he was able to get me relief after all the physical stress I put my body through.”</blockquote>
+            <figcaption class="eyebrow mt-8">Kaleb I. — Deep tissue &amp; recovery</figcaption>
+          </figure>
+          <figure>
+            <blockquote class="display text-[clamp(1.9rem,4.2vw,3.8rem)] !leading-[1.08]">“One of the best massages I have ever had — I feel he can keep my back pain and tightness taken care of.”</blockquote>
+            <figcaption class="eyebrow mt-8">Deborah C. — Back pain &amp; tightness</figcaption>
+          </figure>
+        </div>
+        <div class="mt-10 flex justify-center gap-2" id="quote-dots" aria-hidden="true"></div>
+        <a class="mt-10 inline-flex items-center gap-3 text-sm text-linen/60 hover:text-linen transition-colors" href="https://www.massagebook.com/therapists/GoodrichMassage/reviews" target="_blank" rel="noopener">
+          <span class="accent tracking-[.2em]">★★★★★</span> 5.0 · 38 verified reviews on MassageBook ↗
+        </a>
+      </div>
+    </section>
+
+    <!-- ───────── VISIT ───────── -->
+    <section id="visit" class="relative px-5 pb-10 pt-28 md:px-10 md:pt-40">
+      <div class="mx-auto max-w-[1600px]">
+        <p class="eyebrow">(07) — Visit</p>
+        <h2 class="display mt-6 text-[clamp(4.5rem,17vw,17rem)] !leading-[.82]">
+          <span class="line"><span class="line-inner">Begin</span></span>
+          <span class="line"><span class="line-inner"><em class="italic accent">softly.</em></span></span>
+        </h2>
+
+        <div class="mt-16 grid gap-12 border-t border-linen/10 pt-10 md:grid-cols-12">
+          <div class="md:col-span-5">
+            <div class="flex flex-wrap gap-3">
+              <a class="btn btn-solid" href="https://www.massagebook.com/therapists/GoodrichMassage" target="_blank" rel="noopener" data-magnetic><span>Book on MassageBook</span><span class="arrow" aria-hidden="true">↗</span></a>
+              <a class="btn btn-ghost" href="https://www.massagebook.com/therapists/GoodrichMassage/gift-certificates?src=external-certificates" target="_blank" rel="noopener" data-magnetic><span>Gift a session</span></a>
+            </div>
+          </div>
+          <dl class="grid gap-8 sm:grid-cols-3 md:col-span-7">
+            <div><dt class="eyebrow !text-[10px]">Studio</dt><dd class="mt-3 leading-relaxed text-linen/75"><a class="hover:text-linen" href="https://www.google.com/maps/dir/?api=1&destination=20905+Torrence+Chapel+Rd+Suite+204+Cornelius+NC+28031" target="_blank" rel="noopener">20905 Torrence Chapel Rd<br/>Suite 204, Cornelius NC 28031 ↗</a></dd></div>
+            <div><dt class="eyebrow !text-[10px]">Contact</dt><dd class="mt-3 leading-relaxed text-linen/75"><a class="hover:text-linen" href="tel:+17049311074">(704) 931-1074</a><br/><a class="hover:text-linen" href="mailto:GoodrichTherapeutics@gmail.com">GoodrichTherapeutics<wbr>@gmail.com</a></dd></div>
+            <div><dt class="eyebrow !text-[10px]">Serving</dt><dd class="mt-3 leading-relaxed text-linen/75">Cornelius, Davidson, Huntersville, Mooresville &amp; Lake Norman</dd></div>
+          </dl>
+        </div>
+
+        <footer class="mt-24 flex flex-col gap-4 border-t border-linen/10 pt-6 text-xs text-linen/40 sm:flex-row sm:justify-between">
+          <span>© <span id="yr"></span> Goodrich Therapeutics · goodrichtherapeutics.com</span>
+          <span>David Goodrich, LMT · NC License #7796</span>
+        </footer>
+      </div>
+    </section>
+  </main>
+
+<!-- Failsafe: never trap visitors behind the curtain if a CDN is blocked -->
+<script>setTimeout(function(){ if (window.gsap) return; var l=document.getElementById('loader'); l && l.remove();
+  document.querySelectorAll('.line-inner,.hero-fade,.reveal-clip,.m-row').forEach(function(e){ e.style.transform='none'; e.style.opacity=1; e.style.clipPath='none'; }); }, 2500);</script>
+<!-- Libraries -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+<script>
+(() => {
+'use strict';
+
+/* ════════════════════════════════════════════════════════════
+   0. CONFIG & DATA
+   ════════════════════════════════════════════════════════════ */
+const BOOK = 'https://www.massagebook.com/therapists/GoodrichMassage';
+const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const FINE = matchMedia('(hover: hover) and (pointer: fine)').matches;
+const hex = h => { const n = parseInt(h.slice(1), 16); return { r: (n >> 16 & 255) / 255, g: (n >> 8 & 255) / 255, b: (n & 255) / 255 }; };
+
+// Each focus owns a palette: c1 = glow, c2 = body, c3 = shadow, base = room
+const PALETTES = {
+  neutral:    { c1:'#c9b08c', c2:'#4d5a66', c3:'#1d2026', base:'#0c0c0e', accent:'#b8a488', accent2:'#4a5560' },
+  relief:     { c1:'#e0b48e', c2:'#7c6a93', c3:'#2a2231', base:'#0e0c10', accent:'#dcb38f', accent2:'#6b5a82' },
+  deep:       { c1:'#d57a4a', c2:'#7a2f28', c3:'#2a1411', base:'#0f0a09', accent:'#d98a5c', accent2:'#6e2c25' },
+  structural: { c1:'#8fc0b8', c2:'#3b5e78', c3:'#121d27', base:'#090d10', accent:'#93c2ba', accent2:'#34566e' },
+};
+
+const THERAPIES = [
+  { id:'relief', no:'01', focus:'Stress Relief', service:'Swedish Massage',
+    tagline:'Soften. Slow. Breathe.',
+    desc:'Long, flowing strokes, kneading and circular work that ease muscle tension, lift circulation and settle a busy mind.',
+    physiology:'Rhythmic, even pressure helps shift the nervous system toward rest-and-digest: breath deepens, heart rate eases, and superficial muscle tone lets go.',
+    depth:2, depthRange:[0,2], pace:'Slow, continuous', ns:'Parasympathetic',
+    benefits:['Deep relaxation & stress relief','Improved circulation','Better sleep quality','Eased everyday aches','Calmer, clearer mind'],
+    rates:[['60 min','$90'],['90 min','$125'],['2 hr','$160']], pos:[.24,.3] },
+  { id:'deep', no:'02', focus:'Deep Tissue', service:'Deep Tissue Massage',
+    tagline:'Reach the layer that holds on.',
+    desc:'Slow, specific pressure into deeper muscle and connective tissue to release chronic tension and long-held pain patterns.',
+    physiology:'Sustained pressure works through superficial layers to address adhesions, restore glide between tissues and increase local blood flow and mobility.',
+    depth:4, depthRange:[1,3], pace:'Slow, sustained', ns:'Down-regulating',
+    benefits:['Relief from chronic muscle tension','Addresses adhesions & scar tissue','Increased blood flow & mobility','Less neck, back & shoulder pain','Stress and anxiety relief'],
+    rates:[['60 min','$90'],['90 min','$125'],['2 hr','$160']], pos:[.76,.24] },
+  { id:'structural', no:'03', focus:'Structural Integration', service:'Structural Integration',
+    tagline:'Realign. Rebalance. Restore.',
+    desc:'A holistic method rooted in the work of Dr. Ida Rolf that reorganises the fascial network so the body can stand easily within gravity.',
+    physiology:'Firm, precise work across the fascial web changes how the body is organised — often leaving clients taller, more balanced and more aware of how they move.',
+    depth:5, depthRange:[1,4], pace:'Precise, progressive', ns:'Re-patterning',
+    benefits:['Improved posture & alignment','Greater flexibility & range of motion','Fewer chronic pain patterns','Better overall physical function','Heightened body awareness'],
+    rates:[['90 min','$135']], pos:[.5,.64] },
+];
+const LAYERS = ['Skin','Superficial fascia','Superficial muscle','Deep muscle','Deep fascia & structure'];
+
+/* live theme object — tweened, read every frame by WebGL + canvas */
+const theme = {};
+(() => { const p = PALETTES.neutral; for (const k of ['c1','c2','c3','base','accent','accent2']) theme[k] = hex(p[k]); })();
+const root = document.documentElement;
+const rgbStr = c => `${Math.round(c.r*255)} ${Math.round(c.g*255)} ${Math.round(c.b*255)}`;
+function pushCSS(){ root.style.setProperty('--accent', rgbStr(theme.accent)); root.style.setProperty('--accent-2', rgbStr(theme.accent2)); }
+
+function setPalette(key, dur = 1.8){
+  const p = PALETTES[key];
+  for (const k of Object.keys(theme)){
+    const t = hex(p[k]);
+    gsap.to(theme[k], { r:t.r, g:t.g, b:t.b, duration:dur, ease:'power2.inOut', overwrite:true,
+      onUpdate: (k === 'accent' || k === 'accent2') ? pushCSS : null });
+  }
+  document.querySelector('meta[name=theme-color]').setAttribute('content', p.base);
+}
+
+/* shared pointer state (written by events, read in RAF — no layout reads in the loop) */
+const pointer = { x: innerWidth/2, y: innerHeight/2, nx: 0, ny: 0, sx: .5, sy: .5, moved: 0 };
+let vw = innerWidth, vh = innerHeight;
+
+/* ════════════════════════════════════════════════════════════
+   1. INERTIAL SMOOTH SCROLL  (window-native, so sticky + ScrollTrigger just work)
+   ════════════════════════════════════════════════════════════ */
+const Smooth = (() => {
+  const enabled = FINE && !REDUCED;
+  let target = scrollY, current = scrollY, driving = false, locked = false;
+  const max = () => document.documentElement.scrollHeight - innerHeight;
+  if (enabled){
+    root.classList.add('has-smooth');
+    addEventListener('wheel', e => {
+      if (e.ctrlKey || locked) return;               // keep pinch-zoom
+      if (e.target.closest && e.target.closest('[data-native-scroll]')) return;
+      e.preventDefault();
+      const d = e.deltaMode === 1 ? e.deltaY * 32 : e.deltaMode === 2 ? e.deltaY * innerHeight : e.deltaY;
+      target = Math.max(0, Math.min(max(), target + d));
+      driving = true;
+    }, { passive:false });
+    // keyboard / scrollbar / find-in-page: resync
+    addEventListener('scroll', () => { if (!driving){ target = current = scrollY; } }, { passive:true });
+  }
+  function tick(){
+    if (!enabled || !driving) return;
+    current += (target - current) * 0.085;
+    if (Math.abs(target - current) < 0.4){ current = target; driving = false; }
+    window.scrollTo(0, current);
+  }
+  function scrollTo(y, immediate){
+    y = Math.max(0, Math.min(max(), y));
+    if (!enabled || immediate){ target = current = y; driving = false; window.scrollTo(0, y); return; }
+    target = y; driving = true;
+  }
+  return { tick, scrollTo, lock:v => locked = v, get y(){ return enabled ? current : scrollY; } };
+})();
+
+/* ════════════════════════════════════════════════════════════
+   2. WEBGL — AURA FIELD (half-res, fullscreen shader)
+   ════════════════════════════════════════════════════════════ */
+const GL = (() => {
+  if (!window.THREE) return null;
+  const auraCanvas = document.getElementById('aura');
+  const fiberCanvas = document.getElementById('fiber');
+  let auraR, fiberR;
+  try {
+    auraR = new THREE.WebGLRenderer({ canvas: auraCanvas, antialias:false, powerPreference:'high-performance' });
+    fiberR = new THREE.WebGLRenderer({ canvas: fiberCanvas, antialias:true, alpha:true, powerPreference:'high-performance' });
+  } catch(e){ return null; }
+  auraR.setPixelRatio(0.5);                                    // soft field → render cheap, let CSS upscale
+  fiberR.setPixelRatio(Math.min(devicePixelRatio, 1.75));
+  fiberR.setClearColor(0x000000, 0);
+
+  /* Aura */
+  const auraScene = new THREE.Scene();
+  const auraCam = new THREE.Camera();
+  const U = {
+    uTime:{value:0}, uRes:{value:new THREE.Vector2(1,1)}, uMouse:{value:new THREE.Vector2(.5,.5)},
+    uScroll:{value:0}, uC1:{value:new THREE.Color()}, uC2:{value:new THREE.Color()}, uC3:{value:new THREE.Color()}, uBase:{value:new THREE.Color()},
+  };
+  auraScene.add(new THREE.Mesh(new THREE.PlaneGeometry(2,2), new THREE.ShaderMaterial({
+    uniforms: U, depthTest:false, depthWrite:false,
+    vertexShader:`void main(){ gl_Position = vec4(position.xy, 0.0, 1.0); }`,
+    fragmentShader:`
+      precision highp float;
+      uniform vec2 uRes, uMouse; uniform float uTime, uScroll;
+      uniform vec3 uC1, uC2, uC3, uBase;
+      float hash(vec2 p){ p = fract(p*vec2(123.34, 456.21)); p += dot(p, p+45.32); return fract(p.x*p.y); }
+      float noise(vec2 p){ vec2 i=floor(p), f=fract(p); vec2 u=f*f*(3.0-2.0*f);
+        return mix(mix(hash(i),hash(i+vec2(1.0,0.0)),u.x), mix(hash(i+vec2(0.0,1.0)),hash(i+vec2(1.0,1.0)),u.x), u.y); }
+      float fbm(vec2 p){ float v=0.0, a=0.5; mat2 m=mat2(1.6,1.2,-1.2,1.6);
+        for(int i=0;i<5;i++){ v+=a*noise(p); p=m*p; a*=0.5; } return v; }
+      void main(){
+        vec2 uv = gl_FragCoord.xy / uRes;
+        float asp = uRes.x / uRes.y;
+        vec2 p = vec2(uv.x*asp, uv.y + uScroll*0.35);
+        vec2 m = vec2(uMouse.x*asp, uMouse.y + uScroll*0.35);
+        float t = uTime*0.045;
+        float breath = 0.5 + 0.5*sin(uTime*0.785);                 // ~8s breath cycle
+        // domain warp pulled gently toward the cursor
+        vec2 toM = (m - p); float md = length(toM);
+        vec2 pull = toM * 0.22 * exp(-md*md*2.2);
+        vec2 q = vec2(fbm(p*1.15 + t + pull), fbm(p*1.15 - t + vec2(3.1,1.7)));
+        vec2 r = vec2(fbm(p*1.5 + 2.0*q + vec2(1.7,9.2) + t*1.4), fbm(p*1.5 + 2.0*q + vec2(8.3,2.8) - t));
+        float f = fbm(p*1.05 + 2.1*r + pull*2.0);
+        float glow = exp(-md*md*3.2);
+        vec3 col = uBase;
+        col = mix(col, uC3, smoothstep(0.15, 0.85, f));
+        col = mix(col, uC2, smoothstep(0.45, 1.15, length(q)) * 0.55);
+        col = mix(col, uC1, smoothstep(0.62, 1.05, f + r.x*0.35 + glow*0.25) * (0.35 + 0.15*breath));
+        col += uC1 * glow * (0.10 + 0.05*breath);
+        float vig = smoothstep(1.25, 0.25, length((uv-0.5)*vec2(asp*0.75,1.0)));
+        col *= mix(0.45, 1.0, vig);
+        col += (hash(gl_FragCoord.xy + fract(uTime)) - 0.5) * 0.02;
+        gl_FragColor = vec4(col, 1.0);
+      }`
+  })));
+
+  /* Fiber ribbon — a bundle of muscle fibres, animated fully on the GPU */
+  const fiberScene = new THREE.Scene();
+  const cam = new THREE.PerspectiveCamera(35, 1, .1, 50); cam.position.set(0,0,6.2);
+  const N = matchMedia('(max-width: 767px)').matches ? 34 : 56;
+  const base = new THREE.TubeGeometry(new THREE.LineCurve3(new THREE.Vector3(-1,0,0), new THREE.Vector3(1,0,0)), 240, 0.011, 5, false);
+  const bp = base.attributes.position.array, bn = base.attributes.normal.array, bi = base.index.array;
+  const vc = bp.length/3;
+  const pos = new Float32Array(bp.length*N), nor = new Float32Array(bn.length*N);
+  const aF = new Float32Array(vc*N), aS = new Float32Array(vc*N), aR = new Float32Array(vc*N);
+  const idx = new Uint32Array(bi.length*N);
+  for (let f=0; f<N; f++){
+    pos.set(bp, f*bp.length); nor.set(bn, f*bn.length);
+    const s = Math.random(), rr = 0.25 + Math.sqrt(Math.random())*0.75;
+    for (let v=0; v<vc; v++){ aF[f*vc+v] = f/N; aS[f*vc+v] = s; aR[f*vc+v] = rr; }
+    for (let i=0; i<bi.length; i++) idx[f*bi.length+i] = bi[i] + f*vc;
+  }
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.BufferAttribute(pos,3));
+  geo.setAttribute('normal', new THREE.BufferAttribute(nor,3));
+  geo.setAttribute('aFiber', new THREE.BufferAttribute(aF,1));
+  geo.setAttribute('aSeed', new THREE.BufferAttribute(aS,1));
+  geo.setAttribute('aRadius', new THREE.BufferAttribute(aR,1));
+  geo.setIndex(new THREE.BufferAttribute(idx,1));
+  base.dispose();
+
+  const FU = {
+    uTime:{value:0}, uIntro:{value:0}, uOpacity:{value:1}, uRelax:{value:0},
+    uMouse:{value:new THREE.Vector2(99,99)}, uLen:{value:5.8}, uTwist:{value:.55},
+    uC1:{value:new THREE.Color()}, uC2:{value:new THREE.Color()},
+  };
+  const fiber = new THREE.Mesh(geo, new THREE.ShaderMaterial({
+    uniforms: FU, transparent:true, depthWrite:false, blending:THREE.AdditiveBlending,
+    vertexShader:`
+      attribute float aFiber, aSeed, aRadius;
+      uniform float uTime, uIntro, uRelax, uLen, uTwist; uniform vec2 uMouse;
+      varying float vT, vFiber, vFres, vSheen, vNear;
+      void main(){
+        float t = position.x, x = t*uLen, tm = uTime;
+        vec3 c = vec3(x, sin(x*0.55 + tm*0.35)*0.5 + sin(x*1.3 - tm*0.2)*0.1, cos(x*0.42 + tm*0.25)*0.55);
+        float md = distance(vec2(x, c.y), uMouse);
+        float loosen = exp(-md*md*0.55) * uRelax;
+        float breath = 0.5 + 0.5*sin(tm*0.785);
+        float body = 1.0 - t*t*0.82;                                // spindle-shaped muscle belly
+        float r = (0.08 + 0.4*body) * (0.9 + 0.12*breath) * (1.0 + loosen*1.4) * aRadius * uIntro;
+        float ang = aFiber*6.28318 + x*uTwist*(1.0 - loosen*0.6) + tm*0.12 + aSeed*0.4;
+        vec3 off = vec3(0.0, cos(ang), sin(ang)) * r;
+        off.y += sin(x*2.6 + aSeed*12.0 + tm*0.9) * (0.018 + loosen*0.06);
+        vec3 p = c + off + vec3(0.0, position.y, position.z) * (0.55 + aSeed*0.9);
+        vT = t; vFiber = aFiber; vNear = loosen;
+        vFres = 1.0 - abs(normal.z);
+        vSheen = pow(max(0.0, sin(x*0.9 - tm*1.05 + aSeed*6.28)), 14.0);
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
+      }`,
+    fragmentShader:`
+      precision highp float;
+      uniform vec3 uC1, uC2; uniform float uOpacity;
+      varying float vT, vFiber, vFres, vSheen, vNear;
+      void main(){
+        float ends = smoothstep(1.0, 0.62, abs(vT));
+        vec3 col = mix(uC2*1.6, uC1, clamp(vFres*0.7 + vFiber*0.3, 0.0, 1.0));
+        col += vec3(1.0, 0.95, 0.88) * (vSheen*0.9 + vNear*0.25);
+        float a = (0.09 + 0.34*vFres + vSheen*0.5) * ends * uOpacity;
+        gl_FragColor = vec4(col, a);
+      }`
+  }));
+  const group = new THREE.Group(); group.add(fiber); fiberScene.add(group);
+
+  function resize(){
+    auraR.setSize(vw, vh, false); U.uRes.value.set(vw*0.5, vh*0.5);
+    fiberR.setSize(vw, vh, false); cam.aspect = vw/vh; cam.updateProjectionMatrix();
+    const portrait = vw < vh;
+    baseY = portrait ? 1.2 : 0.2;
+    group.position.set(portrait ? 0.3 : 1.35, baseY, 0);
+    group.rotation.z = portrait ? -0.28 : -0.62;
+    group.scale.setScalar(portrait ? 0.55 : 1);
+    FU.uLen.value = portrait ? 4.4 : 5.8;
+  }
+
+  let baseY = 0.2;
+  const halfH = Math.tan(THREE.MathUtils.degToRad(17.5)) * 6.2;
+  let relax = 0, fiberVisible = true, tension = .72, tensionEl = document.getElementById('tension-val'), tensionBar = document.getElementById('tension-bar'), frame = 0;
+  const heroH = () => vh;
+
+  function render(time, dt){
+    U.uTime.value = time; FU.uTime.value = REDUCED ? 8 : time;
+    U.uC1.value.setRGB(theme.c1.r, theme.c1.g, theme.c1.b);
+    U.uC2.value.setRGB(theme.c2.r, theme.c2.g, theme.c2.b);
+    U.uC3.value.setRGB(theme.c3.r, theme.c3.g, theme.c3.b);
+    U.uBase.value.setRGB(theme.base.r, theme.base.g, theme.base.b);
+    U.uMouse.value.set(pointer.sx, 1 - pointer.sy);
+    const sy = Smooth.y;
+    U.uScroll.value = sy / vh;
+    auraR.render(auraScene, auraCam);
+
+    // Fibre: only while the hero is on screen
+    const prog = Math.min(1, sy / (heroH()*0.9));
+    const vis = prog < 1;
+    if (vis !== fiberVisible){ fiberVisible = vis; fiberCanvas.style.visibility = vis ? 'visible' : 'hidden'; }
+    if (!vis) return;
+    relax += ((pointer.moved > 0 ? 1 : 0) - relax) * Math.min(1, dt*2.2);
+    pointer.moved = Math.max(0, pointer.moved - dt);
+    FU.uRelax.value = relax;
+    FU.uOpacity.value = 1 - prog;
+    // mouse into (approx) fibre-local space
+    const hw = halfH * cam.aspect;
+    const wx = pointer.nx*hw - group.position.x, wy = -pointer.ny*halfH - group.position.y + sy/vh*1.6;
+    const cz = Math.cos(-group.rotation.z), sz = Math.sin(-group.rotation.z), s = 1/group.scale.x;
+    FU.uMouse.value.set((wx*cz - wy*sz)*s, (wx*sz + wy*cz)*s);
+    group.position.y += (baseY + prog*1.6 - group.position.y) * 0.1;
+    group.rotation.x += (pointer.ny*0.18 - group.rotation.x) * 0.04;
+    group.rotation.y += (pointer.nx*0.22 - group.rotation.y) * 0.04;
+    FU.uC1.value.setRGB(theme.c1.r, theme.c1.g, theme.c1.b);
+    FU.uC2.value.setRGB(theme.c2.r, theme.c2.g, theme.c2.b);
+    fiberR.render(fiberScene, cam);
+
+    // tension read-out (DOM write throttled)
+    tension += ((0.72 - relax*0.58) - tension) * 0.05;
+    if ((frame++ & 7) === 0 && tensionEl){ tensionEl.textContent = tension.toFixed(2); tensionBar.style.width = (tension*100).toFixed(1)+'%'; }
+  }
+  return { resize, render, intro: FU.uIntro };
+})();
+if (!GL){ document.getElementById('aura').style.background = 'radial-gradient(80% 60% at 70% 40%, #2a2622, #0c0c0e)'; }
+
+/* ════════════════════════════════════════════════════════════
+   3. SENSORY SELECTOR (2D canvas particle / node field)
+   ════════════════════════════════════════════════════════════ */
+const Selector = (() => {
+  const cv = document.getElementById('selector-stage'), wrap = document.getElementById('selector-wrap');
+  const ctx = cv.getContext('2d'), layer = document.getElementById('node-layer');
+  const coordEl = document.getElementById('sel-coords');
+  let W = 0, H = 0, dpr = 1, rectL = 0, rectT = 0, visible = false, active = null;
+  const orb = { x:.5, y:.5, tx:.5, ty:.5, vx:0, vy:0, drag:false };
+  const nodes = THERAPIES.map(t => ({ ...t, x:t.pos[0], y:t.pos[1], pulse:0 }));
+
+  // HTML node labels (accessible radios)
+  nodes.forEach(n => {
+    const b = document.createElement('button');
+    b.className = 'node-btn'; b.type = 'button'; b.setAttribute('role','radio'); b.setAttribute('aria-checked','false');
+    b.style.left = (n.x*100)+'%'; b.style.top = (n.y*100)+'%';
+    b.innerHTML = `<span class="n-name">${n.focus}</span><span class="n-sub">${n.service === n.focus ? 'Fascial re-patterning' : n.service}</span>`;
+    b.addEventListener('click', e => { e.stopPropagation(); select(n, true); });
+    b.addEventListener('keydown', e => {
+      const i = nodes.indexOf(n);
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown'){ e.preventDefault(); nodes[(i+1)%3].btn.focus(); select(nodes[(i+1)%3], true); }
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowUp'){ e.preventDefault(); nodes[(i+2)%3].btn.focus(); select(nodes[(i+2)%3], true); }
+    });
+    layer.appendChild(b); n.btn = b;
+  });
+
+  // particles
+  const P = [], COUNT = innerWidth < 768 ? 160 : 280;
+  for (let i=0; i<COUNT; i++){
+    const home = i % 4 === 3 ? -1 : i % 3;          // -1 = free-floating
+    P.push({ x:Math.random(), y:Math.random(), vx:0, vy:0, home, a:Math.random()*6.283, rad:.03+Math.random()*.14, spd:.15+Math.random()*.5, s:.6+Math.random()*1.6 });
+  }
+
+  function resize(){
+    const r = wrap.getBoundingClientRect();
+    W = r.width; H = r.height; dpr = Math.min(devicePixelRatio, 2);
+    cv.width = W*dpr; cv.height = H*dpr; ctx.setTransform(dpr,0,0,dpr,0,0);
+  }
+  function cacheRect(){ const r = cv.getBoundingClientRect(); rectL = r.left; rectT = r.top; }
+
+  function local(e){ return { x:(e.clientX - rectL)/W, y:(e.clientY - rectT)/H }; }
+  function nearest(x, y){ let best=null, bd=1e9; for (const n of nodes){ const d=Math.hypot((n.x-x)*W,(n.y-y)*H); if (d<bd){bd=d;best=n;} } return {n:best, d:bd}; }
+
+  cv.addEventListener('pointerdown', e => {
+    cacheRect(); const p = local(e);
+    orb.drag = true; orb.tx = p.x; orb.ty = p.y; cv.setPointerCapture(e.pointerId);
+    document.body.classList.add('c-drag');
+  });
+  cv.addEventListener('pointermove', e => { if (!orb.drag) return; const p = local(e); orb.tx = Math.min(.97,Math.max(.03,p.x)); orb.ty = Math.min(.97,Math.max(.03,p.y)); });
+  const release = () => {
+    if (!orb.drag) return; orb.drag = false;
+    const { n } = nearest(orb.x, orb.y); select(n, true);
+  };
+  cv.addEventListener('pointerup', release); cv.addEventListener('pointercancel', release);
+  cv.addEventListener('pointerenter', () => FINE && document.body.classList.add('c-drag'));
+  cv.addEventListener('pointerleave', () => { if (!orb.drag) document.body.classList.remove('c-drag'); });
+
+  function select(n, user){
+    if (active === n){ orb.tx = n.x; orb.ty = n.y; return; }
+    active = n; orb.tx = n.x; orb.ty = n.y; n.pulse = 1;
+    nodes.forEach(o => { o.btn.classList.toggle('is-active', o===n); o.btn.setAttribute('aria-checked', o===n); o.btn.tabIndex = o===n ? 0 : -1; });
+    setPalette(n.id);
+    Panel.show(n);
+    if (user) Matrix.highlight(n.id);
+  }
+
+  function draw(dt, time){
+    // orb spring
+    const k = orb.drag ? 0.35 : 0.08;
+    orb.vx = (orb.vx + (orb.tx - orb.x)*k) * 0.72; orb.vy = (orb.vy + (orb.ty - orb.y)*k) * 0.72;
+    orb.x += orb.vx; orb.y += orb.vy;
+
+    const c1 = theme.c1, acc = theme.accent;
+    const A = `${c1.r*255|0},${c1.g*255|0},${c1.b*255|0}`;
+    const L = '237,230,218';
+    ctx.clearRect(0,0,W,H);
+
+    const near = nearest(orb.x, orb.y);
+    const ox = orb.x*W, oy = orb.y*H;
+
+    // tethers orb → nodes
+    for (const n of nodes){
+      const nx = n.x*W, ny = n.y*H, d = Math.hypot(nx-ox, ny-oy);
+      const s = Math.max(0, 1 - d/(Math.max(W,H)*0.8));
+      ctx.strokeStyle = `rgba(${n===near.n || n===active ? A : L},${0.05 + s*0.35})`;
+      ctx.lineWidth = 1; ctx.setLineDash(n===active ? [] : [2,6]);
+      ctx.beginPath(); ctx.moveTo(ox,oy);
+      const mx = (ox+nx)/2 + Math.sin(time*0.6 + n.x*9)*18, my = (oy+ny)/2 + Math.cos(time*0.5 + n.y*9)*18;
+      ctx.quadraticCurveTo(mx,my,nx,ny); ctx.stroke();
+    }
+    ctx.setLineDash([]);
+
+    // nodes
+    for (const n of nodes){
+      const nx = n.x*W, ny = n.y*H, isA = n===active;
+      n.pulse = Math.max(0, n.pulse - dt*0.6);
+      const breath = 0.5 + 0.5*Math.sin(time*0.785 + n.x*4);
+      const R = (isA ? 34 : 22) + breath*6;
+      const g = ctx.createRadialGradient(nx,ny,0,nx,ny,R*3);
+      g.addColorStop(0, `rgba(${isA?A:L},${isA?0.35:0.12})`); g.addColorStop(1, `rgba(${isA?A:L},0)`);
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(nx,ny,R*3,0,6.283); ctx.fill();
+      ctx.strokeStyle = `rgba(${isA?A:L},${isA?0.8:0.25})`; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.arc(nx,ny,R,0,6.283); ctx.stroke();
+      if (n.pulse > 0){ ctx.strokeStyle = `rgba(${A},${n.pulse*0.6})`; ctx.beginPath(); ctx.arc(nx,ny,R + (1-n.pulse)*90,0,6.283); ctx.stroke(); }
+    }
+
+    // particles
+    ctx.globalCompositeOperation = 'lighter';
+    for (const p of P){
+      let hx, hy, rad = p.rad;
+      if (active && p.home !== -1 && Math.random() < 0.002) p.home = nodes.indexOf(active);   // slow migration toward chosen focus
+      if (p.home === -1){ hx = .5 + Math.sin(time*p.spd*0.3 + p.a)*.45; hy = .5 + Math.cos(time*p.spd*0.23 + p.a*1.3)*.42; }
+      else { const n = nodes[p.home]; const isA = n===active; p.a += dt*p.spd*(isA?0.9:0.4); rad = p.rad*(isA?1.35:1);
+        hx = n.x + Math.cos(p.a)*rad*H/W; hy = n.y + Math.sin(p.a)*rad; }
+      // orb gravity while dragging
+      const dx = orb.x - p.x, dy = orb.y - p.y, od = Math.hypot(dx*W,dy*H);
+      const pull = orb.drag ? Math.max(0, 1 - od/180)*0.02 : 0;
+      p.vx = (p.vx + (hx - p.x)*0.012 + dx*pull) * 0.9;
+      p.vy = (p.vy + (hy - p.y)*0.012 + dy*pull) * 0.9;
+      p.x += p.vx; p.y += p.vy;
+      const col = p.home !== -1 && nodes[p.home]===active ? A : L;
+      ctx.fillStyle = `rgba(${col},${p.home===-1?0.25:0.55})`;
+      ctx.fillRect(p.x*W, p.y*H, p.s, p.s);
+    }
+    ctx.globalCompositeOperation = 'source-over';
+
+    // orb
+    const og = ctx.createRadialGradient(ox,oy,0,ox,oy,70);
+    og.addColorStop(0, `rgba(255,248,238,0.95)`); og.addColorStop(.12, `rgba(${A},0.7)`); og.addColorStop(1, `rgba(${A},0)`);
+    ctx.fillStyle = og; ctx.beginPath(); ctx.arc(ox,oy,70,0,6.283); ctx.fill();
+    ctx.strokeStyle = `rgba(${L},0.6)`; ctx.beginPath(); ctx.arc(ox,oy,orb.drag?16:11,0,6.283); ctx.stroke();
+
+    if ((time*10|0) % 2 === 0) coordEl.textContent = `x ${orb.x.toFixed(2)} · y ${(1-orb.y).toFixed(2)}${orb.drag ? ' · → ' + near.n.focus : ''}`;
+  }
+
+  new IntersectionObserver(es => es.forEach(e => visible = e.isIntersecting), { rootMargin:'100px' }).observe(wrap);
+  return { resize, draw: (dt,t) => visible && draw(dt,t), select, nodes };
+})();
+
+/* Focus panel */
+const Panel = (() => {
+  const el = document.querySelector('[data-panel]');
+  const f = k => document.querySelector(`[data-f="${k}"]`);
+  function show(n){
+    gsap.to(el, { opacity:0, y:12, duration:.28, ease:'power2.in', onComplete(){
+      f('service').textContent = `${n.no} — ${n.service}`;
+      f('name').textContent = n.focus;
+      f('tagline').textContent = n.tagline;
+      f('desc').textContent = n.desc;
+      f('pace').textContent = n.pace;
+      f('ns').textContent = n.ns;
+      f('rates').textContent = n.rates.map(r => `${r[0]} ${r[1]}`).join(' · ');
+      [...f('depth').children].forEach((i,k) => i.classList.toggle('on', k < n.depth));
+      gsap.to(el, { opacity:1, y:0, duration:.7, ease:'expo.out' });
+    }});
+  }
+  return { show };
+})();
+
+/* ════════════════════════════════════════════════════════════
+   4. THERAPEUTICS MATRIX
+   ════════════════════════════════════════════════════════════ */
+const Matrix = (() => {
+  const host = document.getElementById('matrix-rows');
+  host.innerHTML = THERAPIES.map(t => `
+    <article class="m-row" data-id="${t.id}">
+      <button class="m-head" aria-expanded="false" aria-controls="mb-${t.id}">
+        <span class="eyebrow num">${t.no}</span>
+        <span><span class="m-title block">${t.service}</span><span class="mt-3 block text-sm text-linen/50 lg:hidden">${t.tagline}</span></span>
+        <span class="hidden lg:block"><span class="meter max-w-40">${[1,2,3,4,5].map(i=>`<i class="${i<=t.depth?'on':''}"></i>`).join('')}</span><span class="eyebrow mt-3 block !text-[10px]">${t.focus}</span></span>
+        <span class="hidden lg:block num text-linen/70">${t.rates.map(r=>r[0]).join(' / ')}<span class="block text-sm text-linen/40">from ${t.rates[0][1]}</span></span>
+        <span class="m-plus" aria-hidden="true"></span>
+      </button>
+      <div class="m-body" id="mb-${t.id}" role="region">
+        <div class="grid gap-12 pb-14 pt-2 lg:grid-cols-[4rem_1fr_1fr_1fr] lg:gap-10">
+          <span class="hidden lg:block"></span>
+          <div data-stagger>
+            <p class="eyebrow !text-[10px]">Treatment depth</p>
+            <div class="mt-5 space-y-1.5">
+              ${LAYERS.map((l,i)=>`<div class="tissue-layer"><div class="fill" data-on="${i>=t.depthRange[0]&&i<=t.depthRange[1]?1:0}"></div><span>${l}</span></div>`).join('')}
+            </div>
+            <p class="mt-5 text-sm text-linen/50">Pace · ${t.pace}</p>
+          </div>
+          <div data-stagger>
+            <p class="eyebrow !text-[10px]">Physiological effect</p>
+            <p class="mt-5 font-serif text-2xl italic leading-snug text-linen/85">${t.tagline}</p>
+            <p class="mt-4 leading-relaxed text-linen/60">${t.physiology}</p>
+            <ul class="mt-6 space-y-2.5 text-sm text-linen/70">${t.benefits.map(b=>`<li class="flex gap-3"><span class="mt-2 h-px w-4 shrink-0 bg-[rgb(var(--accent))]"></span>${b}</li>`).join('')}</ul>
+          </div>
+          <div data-stagger>
+            <p class="eyebrow !text-[10px]">Schedule</p>
+            <div class="mt-5 flex flex-wrap gap-2">
+              ${t.rates.map(r=>`<a class="chip" href="${BOOK}" target="_blank" rel="noopener"><span class="text-xs uppercase tracking-[.16em] text-linen/50">${r[0]}</span><span class="font-serif text-3xl num">${r[1]}</span></a>`).join('')}
+            </div>
+            <a class="btn btn-solid mt-8" href="${BOOK}" target="_blank" rel="noopener" data-magnetic><span>Book ${t.service.split(' ')[0]}</span><span class="arrow" aria-hidden="true">↗</span></a>
+            <p class="mt-4 text-xs text-linen/40">Opens MassageBook · live availability</p>
+          </div>
+        </div>
+      </div>
+    </article>`).join('');
+
+  const rows = [...host.querySelectorAll('.m-row')];
+  function open(row, state){
+    const body = row.querySelector('.m-body'), head = row.querySelector('.m-head');
+    const isOpen = row.classList.contains('is-open');
+    if (state === isOpen) return;
+    row.classList.toggle('is-open', state); head.setAttribute('aria-expanded', state);
+    gsap.killTweensOf(body);
+    if (state){
+      gsap.to(body, { height:'auto', duration:1, ease:'expo.out', onComplete: () => ScrollTrigger.refresh() });
+      gsap.fromTo(body.querySelectorAll('[data-stagger]'), { y:30, opacity:0 }, { y:0, opacity:1, stagger:.08, duration:.9, ease:'expo.out', delay:.1 });
+      gsap.fromTo(body.querySelectorAll('.fill[data-on="1"]'), { scaleX:0 }, { scaleX:1, stagger:.07, duration:1.1, ease:'expo.out', delay:.25 });
+      const id = row.dataset.id; if (Selector.nodes) { const n = Selector.nodes.find(n=>n.id===id); n && Selector.select(n, false); }
+    } else {
+      gsap.to(body, { height:0, duration:.7, ease:'expo.inOut', onComplete: () => ScrollTrigger.refresh() });
+    }
+  }
+  rows.forEach(row => {
+    row.querySelector('.m-head').addEventListener('click', () => {
+      const willOpen = !row.classList.contains('is-open');
+      rows.forEach(r => r !== row && open(r, false));
+      open(row, willOpen);
+    });
+    row.addEventListener('pointermove', e => {           // cursor-follow light (rect read on move only, not in RAF)
+      const r = row.getBoundingClientRect();
+      row.style.setProperty('--mx', (e.clientX - r.left)+'px'); row.style.setProperty('--my', (e.clientY - r.top)+'px');
+    });
+  });
+  function highlight(id){ rows.forEach(r => r.classList.toggle('is-hint', r.dataset.id===id)); }
+  return { highlight, open, rows };
+})();
+
+/* ════════════════════════════════════════════════════════════
+   5. CURSOR + MAGNETIC ELEMENTS
+   ════════════════════════════════════════════════════════════ */
+const Cursor = (() => {
+  if (!FINE) return { tick(){} };
+  document.body.classList.add('custom-cursor');
+  const ring = document.querySelector('.cursor-ring'), dot = document.querySelector('.cursor-dot');
+  let rx = pointer.x, ry = pointer.y;
+  document.addEventListener('pointerover', e => { if (e.target.closest('a,button')) document.body.classList.add('c-hover'); });
+  document.addEventListener('pointerout', e => { if (e.target.closest('a,button')) document.body.classList.remove('c-hover'); });
+  // magnetic buttons
+  document.querySelectorAll('[data-magnetic]').forEach(el => {
+    const qx = gsap.quickTo(el, 'x', { duration:.6, ease:'power3.out' }), qy = gsap.quickTo(el, 'y', { duration:.6, ease:'power3.out' });
+    el.addEventListener('pointermove', e => { const r = el.getBoundingClientRect(); qx((e.clientX - r.left - r.width/2)*0.25); qy((e.clientY - r.top - r.height/2)*0.35); });
+    el.addEventListener('pointerleave', () => { qx(0); qy(0); });
+  });
+  return { tick(){
+    rx += (pointer.x - rx)*0.16; ry += (pointer.y - ry)*0.16;
+    dot.style.transform = `translate3d(${pointer.x}px,${pointer.y}px,0)`;
+    ring.style.transform = `translate3d(${rx}px,${ry}px,0)`;
+  }};
+})();
+
+addEventListener('pointermove', e => {
+  pointer.x = e.clientX; pointer.y = e.clientY;
+  pointer.nx = (e.clientX / vw) * 2 - 1; pointer.ny = (e.clientY / vh) * 2 - 1;
+  pointer.moved = 1.2;
+}, { passive:true });
+
+/* ════════════════════════════════════════════════════════════
+   6. SCROLL CHOREOGRAPHY (GSAP ScrollTrigger)
+   ════════════════════════════════════════════════════════════ */
+gsap.registerPlugin(ScrollTrigger);
+
+function splitWords(el){
+  const words = el.textContent.trim().split(/\s+/);
+  el.setAttribute('aria-label', el.textContent.trim());
+  el.innerHTML = words.map(w => `<span class="word" aria-hidden="true">${w}</span>`).join(' ');
+  return el.querySelectorAll('.word');
+}
+
+function setupScroll(){
+  // Kinetic manifesto: words brighten, ghost word fills, strip slides — all scrubbed to scroll
+  const kin = document.getElementById('philosophy');
+  const words = splitWords(document.getElementById('manifesto'));
+  if (!REDUCED){
+    const mm = gsap.matchMedia();
+    const build = (start, end) => {
+      const span = words.length*0.12;
+      gsap.timeline({ scrollTrigger:{ trigger:kin, start, end, scrub:0.3 } })
+        .to(words, { opacity:1, stagger:0.12, ease:'none', duration:1 }, 0)
+        .fromTo('#ghost', { xPercent:8 }, { xPercent:-22, ease:'none', duration:span }, 0)
+        .to('#ghost .ghost-fill', { clipPath:'inset(0% 0 0 0)', ease:'none', duration:span }, 0)
+        .fromTo('#kinetic-strip', { xPercent:0 }, { xPercent:-35, ease:'none', duration:span }, 0);
+    };
+    // Desktop: words start lighting while the quote slides in, and the last word lands
+    // exactly as the pin releases ('bottom bottom'), so there is no dead scroll.
+    mm.add('(min-width: 768px)', () => build('top 75%', 'bottom bottom'));
+    // Phones: no pin — a quick reveal as the quote passes through the screen.
+    mm.add('(max-width: 767px)', () => build('top 85%', 'center 45%'));
+  }
+
+  // Section headings: masked line rise
+  document.querySelectorAll('section:not(#hero) h2 .line-inner').forEach(el => {
+    gsap.fromTo(el, { yPercent:110, rotate:2 }, { yPercent:0, rotate:0, duration:1.3, ease:'expo.out',
+      scrollTrigger:{ trigger:el.closest('h2'), start:'top 85%' } });
+  });
+  // Portrait clip reveal
+  gsap.to('.reveal-clip', { clipPath:'inset(0 0 0% 0)', duration:1.6, ease:'expo.inOut', scrollTrigger:{ trigger:'.reveal-clip', start:'top 80%' } });
+  // Counters
+  document.querySelectorAll('[data-count]').forEach(el => {
+    const end = +el.dataset.count, dec = +(el.dataset.decimals||0), o = { v:0 };
+    ScrollTrigger.create({ trigger:el, start:'top 90%', once:true, onEnter: () =>
+      gsap.to(o, { v:end, duration:2.2, ease:'expo.out', onUpdate: () => el.textContent = dec ? o.v.toFixed(dec) : Math.round(o.v).toLocaleString() }) });
+  });
+  // Matrix rows stagger in
+  gsap.fromTo('.m-row', { y:40, opacity:0 }, { y:0, opacity:1, stagger:.12, duration:1.1, ease:'expo.out', scrollTrigger:{ trigger:'#matrix-rows', start:'top 85%' } });
+  // Generic fade-ups
+  gsap.utils.toArray('#focus-panel, #selector-wrap, #words figure, #visit dl, #visit .btn').forEach(el => {
+    gsap.fromTo(el, { y:30, opacity:0 }, { y:0, opacity:1, duration:1.2, ease:'expo.out', scrollTrigger:{ trigger:el, start:'top 90%' } });
+  });
+  // Velocity-reactive skew on large display headings
+  const skewers = gsap.utils.toArray('#visit h2, #matrix h2');
+  const setSkew = skewers.map(el => gsap.quickTo(el, 'skewY', { duration:.8, ease:'power3.out' }));
+  ScrollTrigger.create({ onUpdate: self => { const s = gsap.utils.clamp(-2, 2, self.getVelocity() / -500); setSkew.forEach(f => f(s)); } });
+  ScrollTrigger.addEventListener('scrollEnd', () => setSkew.forEach(f => f(0)));
+
+  // Nav: hide on scroll down, solid after hero
+  const nav = document.getElementById('nav'); let lastY = 0;
+  ScrollTrigger.create({ start:0, end:'max', onUpdate: self => {
+    const y = self.scroll();
+    nav.classList.toggle('is-solid', y > vh*0.6);
+    nav.classList.toggle('is-hidden', y > vh && y > lastY + 2);
+    if (y < lastY - 2) nav.classList.remove('is-hidden');
+    lastY = y;
+  }});
+}
+
+/* Testimonials — breathing crossfade */
+(() => {
+  const figs = [...document.querySelectorAll('#quotes figure')], dots = document.getElementById('quote-dots');
+  figs.forEach((_,i) => { const d = document.createElement('i'); d.className = 'block h-px w-8 bg-linen/20 transition-colors duration-700'; dots.appendChild(d); });
+  let i = 0;
+  const show = k => figs.forEach((f,j) => {
+    gsap.to(f, { opacity: j===k?1:0, filter: j===k?'blur(0px)':'blur(8px)', y: j===k?0:10, duration:1.4, ease:'power2.inOut' });
+    f.setAttribute('aria-hidden', j!==k); dots.children[j].style.background = j===k ? 'rgb(var(--accent))' : '';
+  });
+  figs.forEach((f,j)=> gsap.set(f,{opacity:j?0:1}));
+  show(0);
+  if (!REDUCED) setInterval(() => { if (!document.hidden) show(i = (i+1)%figs.length); }, 6500);
+})();
+
+/* ════════════════════════════════════════════════════════════
+   7. PAGE TRANSITIONS — entry curtain + veil for in-page navigation
+   ════════════════════════════════════════════════════════════ */
+function veilTo(hash){
+  const target = hash === '#top' ? document.body : document.querySelector(hash);
+  if (!target) return;
+  const y = hash === '#top' ? 0 : target.getBoundingClientRect().top + scrollY;
+  if (REDUCED){ Smooth.scrollTo(y, true); return; }
+  const v = document.getElementById('veil');
+  Smooth.lock(true);
+  gsap.timeline({ onComplete: () => Smooth.lock(false) })
+    .set(v, { transformOrigin:'bottom' })
+    .to(v, { scaleY:1, duration:.6, ease:'expo.in' })
+    .add(() => { Smooth.scrollTo(y, true); ScrollTrigger.update(); history.replaceState(null,'',hash); })
+    .set(v, { transformOrigin:'top' })
+    .to(v, { scaleY:0, duration:.8, ease:'expo.out', delay:.08 });
+}
+document.querySelectorAll('a[data-veil]').forEach(a => a.addEventListener('click', e => { e.preventDefault(); veilTo(a.getAttribute('href')); }));
+
+function intro(){
+  const loader = document.getElementById('loader'), count = document.getElementById('loader-count'), cue = document.getElementById('loader-cue');
+  const heroLines = document.querySelectorAll('#hero .line-inner'), fades = document.querySelectorAll('.hero-fade');
+  gsap.set(heroLines, { yPercent:115, rotate:3 }); gsap.set(fades, { opacity:0, y:20 });
+  const o = { v:0 };
+  const tl = gsap.timeline();
+  if (REDUCED){ loader.remove(); gsap.set(heroLines,{yPercent:0,rotate:0}); gsap.set(fades,{opacity:1,y:0}); if (GL) GL.intro.value = 1; return; }
+  tl.to(o, { v:100, duration:1.8, ease:'power2.inOut', onUpdate: () => { count.textContent = String(Math.round(o.v)).padStart(2,'0'); if (o.v > 55) cue.textContent = 'Exhale'; } })
+    .to(loader, { clipPath:'inset(0 0 100% 0)', duration:1.2, ease:'expo.inOut' })
+    .add(() => loader.remove())
+    .to(GL ? GL.intro : {}, { value:1, duration:2.6, ease:'expo.out' }, '-=0.9')
+    .to(heroLines, { yPercent:0, rotate:0, duration:1.5, stagger:.12, ease:'expo.out' }, '-=2.4')
+    .to(fades, { opacity:1, y:0, duration:1.2, stagger:.08, ease:'expo.out' }, '-=1.2');
+}
+
+/* Breath cue in hero (synced to the 8s CSS breath) */
+(() => { const el = document.getElementById('breath-cue'); let inhale = true;
+  if (!REDUCED) setInterval(() => { inhale = !inhale; el.textContent = inhale ? 'Inhale' : 'Exhale'; }, 4000); })();
+
+/* ════════════════════════════════════════════════════════════
+   8. SINGLE RAF LOOP  (everything animated shares one frame)
+   ════════════════════════════════════════════════════════════ */
+let last = performance.now(), running = true, clock = 0;
+function loop(now){
+  if (!running) return;
+  const dt = Math.min(0.05, (now - last) / 1000); last = now; clock += dt;
+  Smooth.tick();
+  pointer.sx += (pointer.x / vw - pointer.sx) * 0.05;
+  pointer.sy += (pointer.y / vh - pointer.sy) * 0.05;
+  GL && GL.render(clock, dt);
+  Selector.draw(dt, clock);
+  Cursor.tick();
+  requestAnimationFrame(loop);
+}
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) running = false;
+  else if (!running){ running = true; last = performance.now(); requestAnimationFrame(loop); }
+});
+
+let rt;
+function onResize(){ vw = innerWidth; vh = innerHeight; GL && GL.resize(); Selector.resize(); }
+addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { onResize(); ScrollTrigger.refresh(); }, 120); });
+
+/* ════════════════════════════════════════════════════════════
+   BOOT
+   ════════════════════════════════════════════════════════════ */
+document.getElementById('yr').textContent = new Date().getFullYear();
+pushCSS();
+onResize();
+setupScroll();
+const start = () => { intro(); requestAnimationFrame(loop); };
+(document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(start);
+})();
+</script>
+</body>
+</html>

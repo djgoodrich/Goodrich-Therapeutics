@@ -1,34 +1,6 @@
-import { Cormorant_Garamond, Inter } from 'next/font/google';
-import './globals.css';
-import SvgFilters from '@/components/SvgFilters';
-import CustomCursor from '@/components/CustomCursor';
-import GrainOverlay from '@/components/GrainOverlay';
-import Preloader from '@/components/Preloader';
-import Navbar from '@/components/Navbar';
-import MobileMenu from '@/components/MobileMenu';
+// Shared site-wide SEO: used by both root layouts (home + classic pages).
 
-const cormorant = Cormorant_Garamond({
-  subsets: ['latin'],
-  weight: ['300', '400', '600'],
-  style: ['normal'],
-  variable: '--font-cormorant',
-  display: 'swap',
-});
-
-const inter = Inter({
-  subsets: ['latin'],
-  variable: '--font-inter',
-  display: 'swap',
-});
-
-export const viewport = {
-  width: 'device-width',
-  initialScale: 1,
-  viewportFit: 'cover',
-  themeColor: '#070707',
-};
-
-export const metadata = {
+export const siteMetadata = {
   title: 'Goodrich Therapeutics | Massage Therapy & Structural Integration in Cornelius, NC',
   description: 'Goodrich Therapeutics provides expert massage therapy and structural integration in Cornelius, NC. Licensed therapist David Goodrich, LMT with 20+ years of experience serving the greater Charlotte area.',
   keywords: ['massage therapy Cornelius NC', 'structural integration Charlotte', 'deep tissue massage Lake Norman', 'Swedish massage Cornelius', 'licensed massage therapist NC'],
@@ -58,7 +30,7 @@ export const metadata = {
   },
 };
 
-const jsonLd = {
+export const businessJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'MassageTherapist',
   name: 'Goodrich Therapeutics',
@@ -112,27 +84,55 @@ const jsonLd = {
     'https://www.massagebook.com/therapists/GoodrichMassage',
     'https://www.massagebook.com/therapists/GoodrichMassage/reviews',
   ],
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '5.0',
+    reviewCount: '38',
+    bestRating: '5',
+    worstRating: '1',
+  },
+  review: [
+    {
+      '@type': 'Review',
+      author: {
+        '@type': 'Person',
+        name: 'Melissa M.',
+      },
+      reviewRating: {
+        '@type': 'Rating',
+        ratingValue: '5',
+        bestRating: '5',
+      },
+      reviewBody:
+        'I have been going to David for years and he always whips my body in shape. I suffer from constant neck issues and he gets rid of the pain.',
+    },
+    {
+      '@type': 'Review',
+      author: {
+        '@type': 'Person',
+        name: 'Kaleb I.',
+      },
+      reviewRating: {
+        '@type': 'Rating',
+        ratingValue: '5',
+        bestRating: '5',
+      },
+      reviewBody:
+        'David was phenomenal—I am very active and he was able to get me relief after all the physical stress I put my body through.',
+    },
+    {
+      '@type': 'Review',
+      author: {
+        '@type': 'Person',
+        name: 'Deborah C.',
+      },
+      reviewRating: {
+        '@type': 'Rating',
+        ratingValue: '5',
+        bestRating: '5',
+      },
+      reviewBody:
+        'One of the best massages I have ever had plus I feel like he will be able to help me keep my back pain and tightness taken care of.',
+    },
+  ],
 };
-
-export default function RootLayout({ children }) {
-  return (
-    <html lang="en" className={`${cormorant.variable} ${inter.variable}`} data-scroll-behavior="smooth">
-      <head>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
-      </head>
-      <body>
-        <SvgFilters />
-        <Preloader />
-        <CustomCursor />
-        <GrainOverlay />
-        <Navbar />
-        <MobileMenu />
-        {children}
-      </body>
-    </html>
-  );
-}
-
