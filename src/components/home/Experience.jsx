@@ -3,11 +3,11 @@
 /**
  * Experience — the homepage's motion + interaction engine.
  *
- * Renders the fixed layers (aura + fibre canvases, grain, intro curtain, veil, cursor)
+ * Renders the fixed layers (aura + fibre canvases, grain, veil, cursor)
  * and, on mount, wires up everything interactive on the server-rendered page:
  *   1. inertial smooth scroll          5. cursor + magnetic buttons
  *   2. WebGL aura + fibre ribbon       6. GSAP ScrollTrigger choreography
- *   3. Sensory Selector (2D canvas)    7. entry curtain + veil transitions
+ *   3. Sensory Selector (2D canvas)    7. veil transitions + mobile booking bar
  *   4. Therapeutics / FAQ accordions   8. one shared requestAnimationFrame loop
  *
  * All per-frame work reads cached values only (no layout reads inside the loop),
@@ -18,7 +18,7 @@ import { useEffect } from 'react';
 import * as THREE from 'three';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { THERAPIES, PALETTES } from '@/data/therapies';
+import { THERAPIES, PALETTES, BOOKING_URL, TAILORED_NOTE, serviceUrl } from '@/data/therapies';
 
 const hex = (h) => { const n = parseInt(h.slice(1), 16); return { r: ((n >> 16) & 255) / 255, g: ((n >> 8) & 255) / 255, b: (n & 255) / 255 }; };
 const rgbStr = (c) => `${Math.round(c.r * 255)} ${Math.round(c.g * 255)} ${Math.round(c.b * 255)}`;
@@ -286,6 +286,8 @@ export default function Experience() {
             f('ns').textContent = n.ns;
             f('rates').textContent = n.rates.map((r) => `${r[0]} ${r[1]}`).join(' · ');
             [...f('depth').children].forEach((i, k) => i.classList.toggle('on', k < n.depth));
+            f('book').href = n.bookKey ? serviceUrl(n.bookKey) : BOOKING_URL;
+            f('note').textContent = n.note === 'custom' ? TAILORED_NOTE : 'Books the 90-minute Structural Integration session directly.';
             gsap.to(el, { opacity: 1, y: 0, duration: 0.7, ease: 'expo.out' });
           } });
         },
@@ -527,7 +529,7 @@ export default function Experience() {
       ScrollTrigger.create({ start: 0, end: 'max', onUpdate: (self) => {
         const y = self.scroll();
         nav.classList.toggle('is-solid', y > vh * 0.6);
-        nav.classList.toggle('is-hidden', y > vh && y > lastY + 2);
+        nav.classList.toggle('is-hidden', vw < 1024 && y > vh && y > lastY + 2);
         if (y < lastY - 2) nav.classList.remove('is-hidden');
         lastY = y;
       } });
@@ -572,25 +574,27 @@ export default function Experience() {
       if (t) requestAnimationFrame(() => Smooth.scrollTo(t.getBoundingClientRect().top + scrollY, true));
     }
 
-    const loader = $('#loader');
-    const seen = root.classList.contains('intro-seen');
-    ctx.add(() => {
-      const heroLines = $$('#hero .line-inner'), fades = $$('.hero-fade');
-      if (REDUCED) { loader.style.display = 'none'; if (GL) GL.intro.value = 1; return; }
-      gsap.set(heroLines, { yPercent: 115, rotate: 3 }); gsap.set(fades, { opacity: 0, y: 20 });
-      const tl = gsap.timeline();
-      if (!seen && getComputedStyle(loader).display !== 'none') {
-        const count = $('#loader-count'), cueEl = $('#loader-cue'), o = { v: 0 };
-        tl.to(o, { v: 100, duration: 1.4, ease: 'power2.inOut', onUpdate: () => { count.textContent = String(Math.round(o.v)).padStart(2, '0'); if (o.v > 55) cueEl.textContent = 'Exhale'; } })
-          .to(loader, { clipPath: 'inset(0 0 100% 0)', duration: 1.1, ease: 'expo.inOut' })
-          .add(() => { loader.style.display = 'none'; try { sessionStorage.setItem('gt-intro', '1'); } catch { /* private mode */ } });
-      } else {
-        loader.style.display = 'none';
-      }
-      tl.to(GL ? GL.intro : {}, { value: 1, duration: 2.6, ease: 'expo.out' }, seen ? 0 : '-=0.8')
-        .to(heroLines, { yPercent: 0, rotate: 0, duration: 1.5, stagger: 0.12, ease: 'expo.out' }, '-=2.4')
-        .to(fades, { opacity: 1, y: 0, duration: 1.2, stagger: 0.08, ease: 'expo.out' }, '-=1.2');
-    });
+    // Hero text + button animate in pure CSS from first paint (see home.css) — the page never
+    // waits on JS before a visitor can book. JS only grows the fibre bundle in.
+    if (GL) {
+      if (REDUCED) GL.intro.value = 1;
+      else ctx.add(() => gsap.to(GL.intro, { value: 1, duration: 2.4, ease: 'expo.out', delay: 0.1 }));
+    }
+
+    /* mobile booking bar: shown once the hero's Book button has scrolled away, hidden again at the Visit section */
+    (() => {
+      const bar = $('#book-bar'), heroBtn = $('[data-book="hero"]'), visit = $('#visit');
+      if (!bar || !heroBtn) return;
+      let pastHero = false, atVisit = false;
+      const update = () => bar.classList.toggle('is-visible', pastHero && !atVisit);
+      const io = new IntersectionObserver((es) => es.forEach((e) => {
+        if (e.target === heroBtn) pastHero = !e.isIntersecting && e.boundingClientRect.top < 0;
+        else atVisit = e.isIntersecting;
+        update();
+      }), { rootMargin: '0px 0px -20% 0px' });
+      io.observe(heroBtn); io.observe(visit);
+      offs.push(() => io.disconnect());
+    })();
 
     /* ════════ 8. SINGLE RAF LOOP ════════ */
     let last = performance.now(), running = true, clock = 0, raf = 0;
@@ -635,17 +639,6 @@ export default function Experience() {
       <canvas id="fiber" aria-hidden="true" />
       <div className="grain" aria-hidden="true" />
 
-      {/* Entry curtain — shown once per session; hidden without JS */}
-      <noscript><style>{'#loader{display:none!important}'}</style></noscript>
-      <div id="loader" aria-hidden="true">
-        <div className="flex flex-col items-center gap-8">
-          <div className="ring" />
-          <div className="text-center">
-            <div className="display text-3xl tracking-tight">Goodrich <em className="italic">Therapeutics</em></div>
-            <div className="eyebrow mt-3"><span id="loader-cue">Inhale</span> · <span id="loader-count" className="num">00</span></div>
-          </div>
-        </div>
-      </div>
       <div id="veil" aria-hidden="true" />
 
       <div className="cursor cursor-ring" aria-hidden="true"><span>Drag</span></div>

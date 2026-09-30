@@ -4,6 +4,7 @@ import { faqData } from '@/data/faqData';
 import {
   THERAPIES, TISSUE_LAYERS, TESTIMONIALS,
   BOOKING_URL, MEMBERSHIPS_URL, GIFT_URL, REVIEWS_URL,
+  REVIEW_SUMMARY, TAILORED_NOTE, serviceUrl,
 } from '@/data/therapies';
 
 const faqJsonLd = {
@@ -23,6 +24,10 @@ function Line({ children }) {
 }
 
 // SVG arrows: text arrows (→ ↗) render as colour emoji on some systems.
+function Stars({ className = '' }) {
+  return <span className={`accent tracking-[.2em] ${className}`} aria-hidden="true">★★★★★</span>;
+}
+
 function Arrow({ diag = false }) {
   return (
     <svg className="arrow inline-block shrink-0" width="12" height="12" viewBox="0 0 12 12" fill="none"
@@ -92,16 +97,22 @@ export default function Home() {
               </div>
 
               <div className="hero-fade md:col-span-5 md:col-start-8">
-                <p className="max-w-md text-[17px] leading-relaxed text-linen/70">
-                  Precision bodywork that realigns posture, unwinds chronic pain and returns the body to effortless
-                  balance — with David Goodrich, LMT, and twenty years of hands-on practice in Cornelius, NC.
+                <p className="max-w-md text-[17px] font-medium leading-snug text-linen">
+                  Custom massage &amp; Structural Integration in Cornelius, NC — sessions from $90.
                 </p>
-                <div className="mt-8 flex flex-wrap gap-3">
-                  <a className="btn btn-solid" href={BOOKING_URL} {...ext} data-magnetic>
-                    <span>Reserve a session</span><Arrow />
+                <p className="mt-3 max-w-md text-[16px] leading-relaxed text-linen/65">
+                  Precision bodywork that realigns posture and unwinds chronic pain, with David Goodrich, LMT — 20+ years
+                  of hands-on practice. Pressure is always tailored to you.
+                </p>
+                <div className="mt-7 flex flex-wrap gap-3">
+                  <a className="btn btn-solid" href={BOOKING_URL} {...ext} data-magnetic data-book="hero">
+                    <span>Book a session</span><Arrow />
                   </a>
                   <a className="btn btn-ghost" href="#focus" data-veil data-magnetic><span>Find your focus</span></a>
                 </div>
+                <a className="mt-5 inline-flex items-center gap-3 text-sm text-linen/70 transition-colors hover:text-linen" href={REVIEWS_URL} {...ext}>
+                  <Stars /> <span><strong className="font-medium text-linen">{REVIEW_SUMMARY.rating}</strong> · {REVIEW_SUMMARY.count} verified reviews on MassageBook</span>
+                </a>
               </div>
             </div>
 
@@ -182,9 +193,12 @@ export default function Home() {
                     <div><dt className="eyebrow !text-[10px]">Nervous system</dt><dd className="mt-2 text-linen/80" data-f="ns">—</dd></div>
                     <div><dt className="eyebrow !text-[10px]">Sessions</dt><dd className="num mt-2 text-linen/80" data-f="rates">—</dd></div>
                   </dl>
+                  <p className="mt-6 max-w-md text-sm leading-relaxed text-linen/50" data-f="note">
+                    Every session is customized — David tailors the pressure to you.
+                  </p>
                 </div>
                 <div className="mt-10 flex flex-wrap gap-3">
-                  <a className="btn btn-solid" href={BOOKING_URL} {...ext} data-magnetic><span>Book this focus</span><Arrow /></a>
+                  <a className="btn btn-solid" href={BOOKING_URL} {...ext} data-magnetic data-f="book"><span>Book this focus</span><Arrow /></a>
                   <a className="btn btn-ghost" href="#matrix" data-veil><span>Compare all</span></a>
                 </div>
               </aside>
@@ -263,16 +277,18 @@ export default function Home() {
                         <p className="eyebrow !text-[10px]">Schedule</p>
                         <div className="mt-5 flex flex-wrap gap-2">
                           {t.rates.map((r) => (
-                            <a key={r[0]} className="chip" href={BOOKING_URL} {...ext}>
+                            <a key={r[0]} className="chip" href={serviceUrl(r[2])} {...ext} aria-label={`Book ${r[0]} — ${r[1]}`}>
                               <span className="text-xs uppercase tracking-[.16em] text-linen/50">{r[0]}</span>
                               <span className="num font-serif text-3xl">{r[1]}</span>
                             </a>
                           ))}
                         </div>
-                        <a className="btn btn-solid mt-8" href={BOOKING_URL} {...ext} data-magnetic>
+                        <a className="btn btn-solid mt-8" href={t.bookKey ? serviceUrl(t.bookKey) : BOOKING_URL} {...ext} data-magnetic>
                           <span>Book this session</span><Arrow diag />
                         </a>
-                        <p className="mt-4 text-xs text-linen/40">Opens MassageBook · live availability</p>
+                        <p className="mt-4 max-w-xs text-xs leading-relaxed text-linen/50">
+                          {t.note === 'custom' ? TAILORED_NOTE : 'Opens MassageBook with live availability.'}
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -445,6 +461,13 @@ export default function Home() {
           </div>
         </section>
       </main>
+
+      {/* ───────── MOBILE BOOKING BAR (appears once the hero button scrolls away) — online booking only ───────── */}
+      <div id="book-bar" className="book-bar" role="region" aria-label="Book a session">
+        <a className="btn btn-solid !h-12 flex-1 justify-center" href={BOOKING_URL} {...ext}>
+          <span>Book online · from $90</span><Arrow />
+        </a>
+      </div>
     </>
   );
 }

@@ -26,9 +26,8 @@ export const viewport = {
 
 export const metadata = siteMetadata;
 
-// Runs before first paint: flags JS for progressive reveals, and skips the
-// intro curtain for visitors who already saw it this session.
-const bootScript = `(function(){var d=document.documentElement;d.classList.add('js');try{if(sessionStorage.getItem('gt-intro'))d.classList.add('intro-seen')}catch(e){}})();`;
+// Runs before first paint: flags JS so progressive reveals only hide content when JS will show it.
+const bootScript = `document.documentElement.classList.add('js');`;
 
 // Root layout for the immersive homepage only.
 export default function HomeRootLayout({ children }) {

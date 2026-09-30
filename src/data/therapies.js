@@ -1,5 +1,22 @@
 // Single source of truth for the homepage therapies (Sensory Selector + Therapeutics matrix).
-export const BOOKING_URL = 'https://www.massagebook.com/therapists/GoodrichMassage';
+// Booking goes straight to MassageBook's service picker (skips the profile page).
+const MB_BUSINESS = 'https://www.massagebook.com/business/12498829';
+export const BOOKING_URL = `${MB_BUSINESS}/select-product/services`;
+export const PROFILE_URL = 'https://www.massagebook.com/therapists/GoodrichMassage';
+
+// Direct links to each MassageBook service (verified against the live MassageBook profile).
+export const SERVICE_IDS = {
+  massage60: 943307,     // 60 minute Massage Session — $90
+  massage90: 943157,     // 90 minute Massage Session — $125
+  massage120: 1390820,   // 2 hour — $160
+  structural90: 1332255, // Structural Integration 90 min session — $135
+};
+export const serviceUrl = (key) => `${MB_BUSINESS}/booking/?service_id=${SERVICE_IDS[key]}`;
+
+export const PHONE = '+17049311074';
+export const PHONE_DISPLAY = '(704) 931-1074';
+export const REVIEW_SUMMARY = { rating: '5.0', count: 38 };
+export const TAILORED_NOTE = 'Booked as a custom Massage Session — David tailors the pressure to you.';
 export const MEMBERSHIPS_URL = 'https://www.massagebook.com/therapists/GoodrichMassage/deals';
 export const GIFT_URL = 'https://www.massagebook.com/therapists/GoodrichMassage/gift-certificates?src=external-certificates';
 export const REVIEWS_URL = 'https://www.massagebook.com/therapists/GoodrichMassage/reviews';
@@ -22,7 +39,8 @@ export const THERAPIES = [
     physiology: 'Rhythmic, even pressure helps shift the nervous system toward rest-and-digest: breath deepens, heart rate eases, and superficial muscle tone lets go.',
     depth: 2, depthRange: [0, 2], pace: 'Slow, continuous', ns: 'Parasympathetic',
     benefits: ['Deep relaxation & stress relief', 'Improved circulation', 'Better sleep quality', 'Eased everyday aches', 'Calmer, clearer mind'],
-    rates: [['60 min', '$90'], ['90 min', '$125'], ['2 hr', '$160']], pos: [0.24, 0.3],
+    rates: [['60 min', '$90', 'massage60'], ['90 min', '$125', 'massage90'], ['2 hr', '$160', 'massage120']], pos: [0.24, 0.3],
+    bookKey: null, note: 'custom',
   },
   {
     id: 'deep', no: '02', focus: 'Deep Tissue', service: 'Deep Tissue Massage', nodeSub: 'Deep tissue massage',
@@ -31,7 +49,8 @@ export const THERAPIES = [
     physiology: 'Sustained pressure works through superficial layers to address adhesions, restore glide between tissues and increase local blood flow and mobility.',
     depth: 4, depthRange: [1, 3], pace: 'Slow, sustained', ns: 'Down-regulating',
     benefits: ['Relief from chronic muscle tension', 'Addresses adhesions & scar tissue', 'Increased blood flow & mobility', 'Less neck, back & shoulder pain', 'Stress and anxiety relief'],
-    rates: [['60 min', '$90'], ['90 min', '$125'], ['2 hr', '$160']], pos: [0.76, 0.24],
+    rates: [['60 min', '$90', 'massage60'], ['90 min', '$125', 'massage90'], ['2 hr', '$160', 'massage120']], pos: [0.76, 0.24],
+    bookKey: null, note: 'custom',
   },
   {
     id: 'structural', no: '03', focus: 'Structural Integration', service: 'Structural Integration', nodeSub: 'Fascial re-patterning',
@@ -40,7 +59,8 @@ export const THERAPIES = [
     physiology: 'Firm, precise work across the fascial web changes how the body is organised — often leaving clients taller, more balanced and more aware of how they move.',
     depth: 5, depthRange: [1, 4], pace: 'Precise, progressive', ns: 'Re-patterning',
     benefits: ['Improved posture & alignment', 'Greater flexibility & range of motion', 'Fewer chronic pain patterns', 'Better overall physical function', 'Heightened body awareness'],
-    rates: [['90 min', '$135']], pos: [0.5, 0.64],
+    rates: [['90 min', '$135', 'structural90']], pos: [0.5, 0.64],
+    bookKey: 'structural90', note: null,
   },
 ];
 
