@@ -1,6 +1,7 @@
 import { Cormorant_Garamond, Inter_Tight } from 'next/font/google';
 import './home.css';
 import { siteMetadata, businessJsonLd } from '@/lib/site';
+import SiteAnalytics from '@/components/SiteAnalytics';
 
 const display = Cormorant_Garamond({
   subsets: ['latin'],
@@ -40,7 +41,10 @@ export default function HomeRootLayout({ children }) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(businessJsonLd) }}
         />
       </head>
-      <body>{children}</body>
+      <body>
+        {children}
+        <SiteAnalytics />
+      </body>
     </html>
   );
 }
