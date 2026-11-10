@@ -1,5 +1,5 @@
 export default function sitemap() {
-  const baseUrl = 'https://goodrichtherapeutics.com';
+  const baseUrl = 'https://www.goodrichtherapeutics.com';
 
   return [
     {

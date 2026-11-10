@@ -515,7 +515,7 @@ export default function Experience() {
 
       ['#matrix-rows', '#faq-rows'].forEach((sel) => gsap.fromTo(`${sel} .m-row`, { y: 40, opacity: 0 },
         { y: 0, opacity: 1, stagger: 0.08, duration: 1.1, ease: 'expo.out', scrollTrigger: { trigger: sel, start: 'top 85%' } }));
-      $$('#focus-panel, #selector-wrap, #words blockquote, #visit dl, #visit .btn').forEach((el) => {
+      $$('#focus-panel, #selector-wrap, #first-visit .step, #first-visit .btn, #words blockquote, #visit dl, #visit .btn').forEach((el) => {
         gsap.fromTo(el, { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 1.2, ease: 'expo.out', scrollTrigger: { trigger: el, start: 'top 90%' } });
       });
 
@@ -580,6 +580,10 @@ export default function Experience() {
       if (REDUCED) GL.intro.value = 1;
       else ctx.add(() => gsap.to(GL.intro, { value: 1, duration: 2.4, ease: 'expo.out', delay: 0.1 }));
     }
+
+    // seasonal gift callout retires itself after its end date (see GIFT_PROMO in data/therapies.js)
+    const promo = $('#gift-promo');
+    if (promo && promo.dataset.until && new Date() > new Date(`${promo.dataset.until}T23:59:59`)) promo.style.display = 'none';
 
     /* mobile booking bar: shown once the hero's Book button has scrolled away, hidden again at the Visit section */
     (() => {

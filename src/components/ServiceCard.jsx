@@ -10,7 +10,7 @@ export default function ServiceCard({
   link,
   delay = 0,
   prices = [],
-  bookLink = 'https://www.massagebook.com/therapists/GoodrichMassage',
+  bookLink = 'https://www.massagebook.com/business/12498829/select-product/services',
 }) {
   const canvasRef = useRef(null);
   const cardRef = useRef(null);

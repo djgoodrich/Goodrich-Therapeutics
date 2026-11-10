@@ -4,6 +4,6 @@ export default function robots() {
       userAgent: '*',
       allow: '/',
     },
-    sitemap: 'https://goodrichtherapeutics.com/sitemap.xml',
+    sitemap: 'https://www.goodrichtherapeutics.com/sitemap.xml',
   };
 }

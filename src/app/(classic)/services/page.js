@@ -218,7 +218,7 @@ export default function ServicesPage() {
               </div>
               <div className="service-detail-cta">
                 <a
-                  href="https://www.massagebook.com/therapists/GoodrichMassage"
+                  href="https://www.massagebook.com/business/12498829/booking/?service_id=1332255"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="btn btn--primary"
@@ -296,7 +296,7 @@ export default function ServicesPage() {
               </div>
               <div className="service-detail-cta">
                 <a
-                  href="https://www.massagebook.com/therapists/GoodrichMassage"
+                  href="https://www.massagebook.com/business/12498829/select-product/services"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="btn btn--primary"
@@ -374,7 +374,7 @@ export default function ServicesPage() {
               </div>
               <div className="service-detail-cta">
                 <a
-                  href="https://www.massagebook.com/therapists/GoodrichMassage"
+                  href="https://www.massagebook.com/business/12498829/select-product/services"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="btn btn--primary"
@@ -448,7 +448,7 @@ export default function ServicesPage() {
         </p>
         <div className="services-cta-actions" data-animate="fade-up">
           <a
-            href="https://www.massagebook.com/therapists/GoodrichMassage"
+            href="https://www.massagebook.com/business/12498829/select-product/services"
             target="_blank"
             rel="noopener noreferrer"
             className="btn btn--primary btn--lg"

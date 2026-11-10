@@ -16,6 +16,16 @@ export const serviceUrl = (key) => `${MB_BUSINESS}/booking/?service_id=${SERVICE
 export const PHONE = '+17049311074';
 export const PHONE_DISPLAY = '(704) 931-1074';
 export const REVIEW_SUMMARY = { rating: '5.0', count: 38 };
+// Seasonal gift-certificate callout in the hero. It hides itself after `until` (YYYY-MM-DD);
+// set `enabled: false` to remove it sooner, or change the label/date for another season.
+export const GIFT_PROMO = { enabled: true, label: 'Holiday gift certificates', until: '2027-01-02' };
+
+export const FIRST_VISIT = [
+  { title: 'Book online', body: 'Choose a session and a time on MassageBook. New clients set up a quick profile once, and after that booking takes under a minute.' },
+  { title: 'A short conversation', body: 'We start with your movement habits, health history and where you feel tension or restriction, followed by a brief standing posture check.' },
+  { title: 'A session shaped to you', body: 'Slow, deliberate work with pressure tailored to your comfort. Speak up any time. Most clients leave feeling taller, lighter and more grounded.' },
+];
+
 export const TAILORED_NOTE = 'Booked as a custom Massage Session — David tailors the pressure to you.';
 export const MEMBERSHIPS_URL = 'https://www.massagebook.com/therapists/GoodrichMassage/deals';
 export const GIFT_URL = 'https://www.massagebook.com/therapists/GoodrichMassage/gift-certificates?src=external-certificates';

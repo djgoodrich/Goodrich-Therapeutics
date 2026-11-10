@@ -4,8 +4,11 @@ import { faqData } from '@/data/faqData';
 import {
   THERAPIES, TISSUE_LAYERS, TESTIMONIALS,
   BOOKING_URL, MEMBERSHIPS_URL, GIFT_URL, REVIEWS_URL,
-  REVIEW_SUMMARY, TAILORED_NOTE, serviceUrl,
+  REVIEW_SUMMARY, TAILORED_NOTE, GIFT_PROMO, FIRST_VISIT, serviceUrl,
 } from '@/data/therapies';
+import SiteAnalytics from '@/components/SiteAnalytics';
+
+export const metadata = { alternates: { canonical: '/' } };
 
 const faqJsonLd = {
   '@context': 'https://schema.org',
@@ -46,6 +49,7 @@ export default function Home() {
 
       {/* Canvases, intro curtain, veil, cursor + all motion/interaction */}
       <Experience />
+      <SiteAnalytics />
 
       {/* ───────── NAV ───────── */}
       <header id="nav" className="fixed inset-x-0 top-0 z-50">
@@ -76,6 +80,13 @@ export default function Home() {
               <span className="hidden h-px w-10 bg-current opacity-40 sm:block" />
               <span>Cornelius · Lake Norman, NC</span>
             </p>
+            {GIFT_PROMO.enabled && (
+              <a id="gift-promo" data-until={GIFT_PROMO.until} className="gift-pill hero-fade -mt-3 mb-5 md:mb-7" href={GIFT_URL} {...ext}>
+                <span className="gift-dot" aria-hidden="true" />
+                <span>{GIFT_PROMO.label}</span>
+                <Arrow />
+              </a>
+            )}
 
             <h1 className="display text-[clamp(3.1rem,min(9.2vw,13.2vh),10rem)]">
               <Line>Release what</Line>
@@ -83,7 +94,7 @@ export default function Home() {
               <Line><em className="italic">holding.</em></Line>
             </h1>
 
-            <div className="mt-8 grid gap-10 md:mt-10 md:grid-cols-12 md:items-end">
+            <div className="mt-6 grid gap-10 md:mt-10 md:grid-cols-12 md:items-end">
               <div className="hero-fade hidden md:col-span-4 md:block" aria-hidden="true">
                 <p className="eyebrow">Fig. 01 — Myofascial bundle</p>
                 <p className="mt-2 text-sm text-linen/50">Live render · move to release tension</p>
@@ -104,13 +115,13 @@ export default function Home() {
                   Precision bodywork that realigns posture and unwinds chronic pain, with David Goodrich, LMT — 20+ years
                   of hands-on practice. Pressure is always tailored to you.
                 </p>
-                <div className="mt-7 flex flex-wrap gap-3">
+                <div className="mt-5 flex flex-wrap gap-3 md:mt-7">
                   <a className="btn btn-solid" href={BOOKING_URL} {...ext} data-magnetic data-book="hero">
                     <span>Book a session</span><Arrow />
                   </a>
                   <a className="btn btn-ghost" href="#focus" data-veil data-magnetic><span>Find your focus</span></a>
                 </div>
-                <a className="mt-5 inline-flex items-center gap-3 text-sm text-linen/70 transition-colors hover:text-linen" href={REVIEWS_URL} {...ext}>
+                <a className="mt-2 inline-flex min-h-11 items-center gap-3 py-3 text-sm text-linen/70 transition-colors hover:text-linen" href={REVIEWS_URL} {...ext}>
                   <Stars /> <span><strong className="font-medium text-linen">{REVIEW_SUMMARY.rating}</strong> · {REVIEW_SUMMARY.count} verified reviews on MassageBook</span>
                 </a>
               </div>
@@ -312,6 +323,32 @@ export default function Home() {
           </div>
         </section>
 
+        {/* ───────── FIRST VISIT ───────── */}
+        <section id="first-visit" className="relative px-5 py-24 md:px-10 md:py-36">
+          <div className="mx-auto max-w-[1600px]">
+            <div className="mb-14 grid gap-8 md:grid-cols-12 md:items-end">
+              <p className="eyebrow md:col-span-3">(05) — Your first visit</p>
+              <h2 className="display text-[clamp(2.6rem,6vw,6rem)] md:col-span-9">
+                <Line>New here? It&rsquo;s</Line>
+                <Line><em className="italic accent">three simple steps.</em></Line>
+              </h2>
+            </div>
+            <ol className="grid border-t border-linen/10 md:grid-cols-3">
+              {FIRST_VISIT.map((step, i) => (
+                <li key={step.title} className="step border-b border-linen/10 py-9 md:border-b-0 md:py-12 md:pr-10 md:[&:not(:first-child)]:border-l md:[&:not(:first-child)]:pl-10">
+                  <span className="display num accent block text-6xl md:text-7xl" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                  <h3 className="mt-6 font-serif text-3xl">{step.title}</h3>
+                  <p className="mt-3 max-w-sm leading-relaxed text-linen/60">{step.body}</p>
+                </li>
+              ))}
+            </ol>
+            <div className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-4">
+              <a className="btn btn-solid" href={BOOKING_URL} {...ext} data-magnetic><span>Book your first session</span><Arrow /></a>
+              <p className="text-sm text-linen/50">Sessions from $90 · 24-hour cancellation notice</p>
+            </div>
+          </div>
+        </section>
+
         {/* ───────── PRACTITIONER ───────── */}
         <section id="practitioner" className="relative px-5 py-28 md:px-10 md:py-40">
           <span id="about" className="absolute top-0" aria-hidden="true" />
@@ -330,7 +367,7 @@ export default function Home() {
               </div>
             </div>
             <div className="flex flex-col justify-center lg:col-span-6 lg:col-start-7">
-              <p className="eyebrow">(05) — Practitioner</p>
+              <p className="eyebrow">(06) — Practitioner</p>
               <h2 className="display mt-6 text-[clamp(2.8rem,6vw,6rem)]">
                 <Line>David Goodrich,</Line>
                 <Line><em className="italic accent">LMT</em></Line>
@@ -356,7 +393,7 @@ export default function Home() {
         <section id="words" className="relative px-5 py-28 md:px-10 md:py-36">
           <span id="testimonials" className="absolute top-0" aria-hidden="true" />
           <div className="mx-auto max-w-[1300px] text-center">
-            <p className="eyebrow">(06) — Words of restoration</p>
+            <p className="eyebrow">(07) — Words of restoration</p>
             <div className="quote-stack mt-12" id="quotes">
               {TESTIMONIALS.map((q, i) => (
                 <figure key={q.name} style={i ? { opacity: 0 } : undefined}>
@@ -368,7 +405,7 @@ export default function Home() {
             <div className="mt-10 flex justify-center gap-2" id="quote-dots" aria-hidden="true">
               {TESTIMONIALS.map((q) => <i key={q.name} className="block h-px w-8 bg-linen/20 transition-colors duration-700" />)}
             </div>
-            <a className="mt-10 inline-flex items-center gap-3 text-sm text-linen/60 transition-colors hover:text-linen" href={REVIEWS_URL} {...ext}>
+            <a className="mt-7 inline-flex min-h-11 items-center gap-3 py-3 text-sm text-linen/60 transition-colors hover:text-linen" href={REVIEWS_URL} {...ext}>
               <span className="accent tracking-[.2em]">★★★★★</span> 5.0 · 38 verified reviews on MassageBook <Arrow diag />
             </a>
           </div>
@@ -378,7 +415,7 @@ export default function Home() {
         <section id="faq" className="relative px-5 py-28 md:px-10 md:py-36">
           <div className="mx-auto max-w-[1600px]">
             <div className="mb-14 grid gap-8 md:grid-cols-12 md:items-end">
-              <p className="eyebrow md:col-span-3">(07) — Questions</p>
+              <p className="eyebrow md:col-span-3">(08) — Questions</p>
               <h2 className="display text-[clamp(2.6rem,6vw,6rem)] md:col-span-6">
                 <Line>Before you</Line>
                 <Line><em className="italic accent">arrive.</em></Line>
@@ -402,8 +439,8 @@ export default function Home() {
               ))}
             </div>
             <p className="mt-10 text-linen/55">
-              Still wondering about your specific situation? Call <a className="accent hover:underline" href="tel:+17049311074">(704) 931-1074</a> or{' '}
-              <a className="accent hover:underline" href="mailto:GoodrichTherapeutics@gmail.com">email David</a>.
+              Still wondering about your specific situation? Call <a className="tap accent hover:underline" href="tel:+17049311074">(704) 931-1074</a> or{' '}
+              <a className="tap accent hover:underline" href="mailto:GoodrichTherapeutics@gmail.com">email David</a>.
             </p>
           </div>
         </section>
@@ -412,7 +449,7 @@ export default function Home() {
         <section id="visit" className="relative px-5 pb-10 pt-28 md:px-10 md:pt-40">
           <span id="contact" className="absolute top-0" aria-hidden="true" />
           <div className="mx-auto max-w-[1600px]">
-            <p className="eyebrow">(08) — Visit</p>
+            <p className="eyebrow">(09) — Visit</p>
             <h2 className="display mt-6 text-[clamp(4.5rem,17vw,17rem)] !leading-[.82]">
               <Line>Begin</Line>
               <Line><em className="italic accent">softly.</em></Line>
@@ -437,8 +474,8 @@ export default function Home() {
                 <div>
                   <dt className="eyebrow !text-[10px]">Contact</dt>
                   <dd className="mt-3 leading-relaxed text-linen/75">
-                    <a className="hover:text-linen" href="tel:+17049311074">(704) 931-1074</a><br />
-                    <a className="hover:text-linen" href="mailto:GoodrichTherapeutics@gmail.com">GoodrichTherapeutics<wbr />@gmail.com</a>
+                    <a className="tap hover:text-linen" href="tel:+17049311074">(704) 931-1074</a><br />
+                    <a className="tap hover:text-linen" href="mailto:GoodrichTherapeutics@gmail.com">GoodrichTherapeutics<wbr />@gmail.com</a>
                   </dd>
                 </div>
                 <div>
@@ -450,11 +487,11 @@ export default function Home() {
 
             <footer className="mt-24 flex flex-col gap-4 border-t border-linen/10 pt-6 text-xs text-linen/40 lg:flex-row lg:items-center lg:justify-between">
               <span>© {year} Goodrich Therapeutics · goodrichtherapeutics.com</span>
-              <nav className="flex flex-wrap gap-x-6 gap-y-2" aria-label="Footer">
-                <a className="hover:text-linen" href="/services">Service details</a>
-                <a className="hover:text-linen" href="/memberships">Memberships</a>
-                <a className="hover:text-linen" href={GIFT_URL} {...ext}>Gift certificates</a>
-                <a className="hover:text-linen" href={REVIEWS_URL} {...ext}>Reviews</a>
+              <nav className="flex flex-wrap gap-x-6" aria-label="Footer">
+                <a className="tap hover:text-linen" href="/services">Service details</a>
+                <a className="tap hover:text-linen" href="/memberships">Memberships</a>
+                <a className="tap hover:text-linen" href={GIFT_URL} {...ext}>Gift certificates</a>
+                <a className="tap hover:text-linen" href={REVIEWS_URL} {...ext}>Reviews</a>
               </nav>
               <span>David Goodrich, LMT · NC License #7796</span>
             </footer>

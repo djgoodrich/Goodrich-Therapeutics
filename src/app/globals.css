@@ -2722,3 +2722,37 @@ section[id] {
   }
 }
 
+
+/* ==========================================
+   MOBILE BOOKING BAR (classic pages)
+   ========================================== */
+.classic-book-bar {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .classic-book-bar {
+    position: fixed;
+    left: 12px;
+    right: 12px;
+    bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+    z-index: 90;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    height: 52px;
+    border-radius: 100px;
+    background: var(--text);
+    color: var(--bg);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+  }
+
+  body {
+    padding-bottom: 76px;
+  }
+}

@@ -72,7 +72,7 @@ export default function MobileMenu() {
           Gift Certificates
         </a>
         <a
-          href="https://www.massagebook.com/therapists/GoodrichMassage"
+          href="https://www.massagebook.com/business/12498829/select-product/services"
           target="_blank"
           rel="noopener noreferrer"
           className="mobile-cta"

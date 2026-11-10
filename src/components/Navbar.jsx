@@ -121,7 +121,7 @@ export default function Navbar() {
         </a>
       </nav>
       <a
-        href="https://www.massagebook.com/therapists/GoodrichMassage"
+        href="https://www.massagebook.com/business/12498829/select-product/services"
         target="_blank"
         rel="noopener noreferrer"
         className="nav-cta"

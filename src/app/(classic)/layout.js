@@ -7,6 +7,8 @@ import GrainOverlay from '@/components/GrainOverlay';
 import Preloader from '@/components/Preloader';
 import Navbar from '@/components/Navbar';
 import MobileMenu from '@/components/MobileMenu';
+import SiteAnalytics from '@/components/SiteAnalytics';
+import { BOOKING_URL } from '@/data/therapies';
 
 const cormorant = Cormorant_Garamond({
   subsets: ['latin'],
@@ -50,6 +52,11 @@ export default function ClassicRootLayout({ children }) {
         <Navbar />
         <MobileMenu />
         {children}
+        {/* Phones: booking is always one tap away */}
+        <a className="classic-book-bar" href={BOOKING_URL} target="_blank" rel="noopener noreferrer">
+          Book online · from $90 <span aria-hidden="true">&rarr;</span>
+        </a>
+        <SiteAnalytics />
       </body>
     </html>
   );
