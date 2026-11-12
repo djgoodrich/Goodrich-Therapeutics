@@ -7,6 +7,7 @@ import {
   REVIEW_SUMMARY, TAILORED_NOTE, GIFT_PROMO, FIRST_VISIT, serviceUrl,
 } from '@/data/therapies';
 import SiteAnalytics from '@/components/SiteAnalytics';
+import SiVideo from '@/components/SiVideo';
 
 export const metadata = { alternates: { canonical: '/' } };
 
@@ -302,6 +303,11 @@ export default function Home() {
                         </p>
                       </div>
                     </div>
+                    {t.id === 'structural' && (
+                      <div data-stagger className="pb-14 lg:ml-[calc(4rem+2.5rem)] lg:max-w-3xl">
+                        <SiVideo />
+                      </div>
+                    )}
                   </div>
                 </article>
               ))}

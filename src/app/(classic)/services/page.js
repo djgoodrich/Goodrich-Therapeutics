@@ -5,6 +5,7 @@ import Link from 'next/link';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Footer from '@/components/Footer';
+import SiVideo from '@/components/SiVideo';
 
 export default function ServicesPage() {
   useEffect(() => {
@@ -202,6 +203,7 @@ export default function ServicesPage() {
               <div className="service-pricing-badge">
                 <span>90 Min &bull; $135</span>
               </div>
+              <SiVideo style={{ margin: '28px 0 36px' }} />
               <div className="service-detail-body">
                 <p>
                   Structural Integration is a holistic bodywork approach that aims to realign and balance the body's structure within its gravitational field. This method, developed by Dr. Ida Rolf, focuses on manipulating the body's myofascial system &mdash; the network of connective tissues that surrounds muscles, bones, and organs.
